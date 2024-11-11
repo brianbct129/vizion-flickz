@@ -721,7 +721,7 @@ class TMDBService
             // 10767 = Talk Show
             // 10763 = News
             // 10766 = Soap (Optional, tergantung apakah ingin include soap opera)
-            $excludedGenres = [99, 10764, 10767, 10763];
+            $excludedGenres = [99, 10764, 10767, 10763, 10766];
             
             return [
                 'results' => collect($result->results)
@@ -929,7 +929,7 @@ class TMDBService
             $result = json_decode($response->getBody());
 
             // Define excluded genres and keywords
-            $excludedGenres = [99, 10764, 10767, 10763]; // Documentary, Reality, Talk Show, News
+            $excludedGenres = [99, 10764, 10767, 10763, 10766]; // Documentary, Reality, Talk Show, News, Soap
             $excludedKeywords = [
                 'tonight show', 'late show', 'late late show', 
                 'daily show', 'talk show', 'live with', 
