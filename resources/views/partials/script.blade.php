@@ -1,0 +1,11 @@
+<script src="{{ asset('js/vendor/jquery-3.6.0.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/isotope.pkgd.min.js') }}"></script>
+        <script src="{{ asset('js/imagesloaded.pkgd.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+        <script src="{{ asset('js/slick.min.js') }}"></script>
+        <script src="{{ asset('js/wow.min.js') }}"></script>
+        <script src="{{ asset('js/plugins.js') }}"></script>
+        <script>var searchRoute = "{{ route('search') }}";</script>
+        <script src="{{ asset('js/main.js') }}"></script>
