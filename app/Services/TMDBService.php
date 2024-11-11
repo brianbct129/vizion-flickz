@@ -382,6 +382,7 @@ class TMDBService
                     'page' => $page,
                     'include_adult' => true,
                     'vote_count.gte' => 50,
+                    'vote_average.gte' => 5.0,
                     'primary_release_date.gte' => '1999-01-01',
                     'primary_release_date.lte' => now()->format('Y-m-d'),
                     'first_air_date.gte' => '1999-01-01',
@@ -397,7 +398,7 @@ class TMDBService
                     if (!in_array($item->media_type, ['movie', 'tv']) || 
                         empty($item->poster_path) || 
                         ($item->original_language ?? '') === 'id' || 
-                        ($item->vote_average ?? 0) < 6.0) {
+                        ($item->vote_average ?? 0) < 5.0) {
                         return false;
                     }
 
@@ -614,6 +615,7 @@ class TMDBService
                     'sort_by' => 'first_air_date.desc',
                     'include_adult' => false,
                     'vote_count.gte' => 50,
+                    'first_air_date.gte' => '2013-01-01',
                     'page' => $page
                 ]
             ]);
@@ -626,7 +628,8 @@ class TMDBService
                         return !empty($show->poster_path) && 
                                !empty($show->first_air_date) &&
                                $show->original_language === 'en' &&
-                               (!isset($show->genre_ids) || !in_array(99, $show->genre_ids)); // Filter Documentary
+                               substr($show->first_air_date, 0, 4) >= 2013 &&
+                               (!isset($show->genre_ids) || !in_array(99, $show->genre_ids));
                     })
                     ->map(function($show) {
                         return (object)[
@@ -637,7 +640,7 @@ class TMDBService
                             'media_type' => 'tv',
                             'vote_average' => $show->vote_average,
                             'popularity' => $show->popularity,
-                            'genre_ids' => $show->genre_ids ?? [] // Pastikan genre_ids tetap ada
+                            'genre_ids' => $show->genre_ids ?? []
                         ];
                     })
                     ->values(),

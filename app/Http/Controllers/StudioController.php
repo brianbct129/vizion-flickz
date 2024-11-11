@@ -24,16 +24,24 @@ class StudioController extends Controller
             $allMarvelTVShows = collect();
             
             // Ambil semua movie Marvel yang tersedia (batasi sampai 5 halaman untuk performa)
-            for ($i = 1; $i <= 5; $i++) {
-                $movies = $this->tmdb->getStudioContent(420, $i); // 420 adalah ID Marvel Studios
-                if (!empty($movies['results'])) {
-                    // Filter: skip item jika salah satu genrenya adalah Documentary
-                    $filteredMovies = collect($movies['results'])->reject(function($movie) {
-                        return isset($movie->genre_ids) && in_array(99, $movie->genre_ids);
-                    });
-                    $allMarvelMovies = $allMarvelMovies->merge($filteredMovies);
+            $studioIds = [420, 7505]; // Marvel Studios dan Marvel Entertainment
+            
+            foreach ($studioIds as $studioId) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $movies = $this->tmdb->getStudioContent($studioId, $i);
+                    if (!empty($movies['results'])) {
+                        // Filter: skip dokumenter dan film dengan rating < 7
+                        $filteredMovies = collect($movies['results'])->reject(function($movie) {
+                            return (isset($movie->genre_ids) && in_array(99, $movie->genre_ids)) || 
+                                   (isset($movie->vote_average) && $movie->vote_average < 7);
+                        });
+                        $allMarvelMovies = $allMarvelMovies->merge($filteredMovies);
+                    }
                 }
             }
+            
+            // Menghilangkan duplikat berdasarkan ID film
+            $allMarvelMovies = $allMarvelMovies->unique('id');
             
             // Ambil TV Shows Marvel (batasi sampai 5 halaman)
             for ($i = 1; $i <= 5; $i++) {
