@@ -1,7 +1,7 @@
 @extends('layouts.app2')
 
 @section('title')
-Nonton {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }}) - Season {{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }} Episode {{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}
+Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }}) - Season {{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }} Episode {{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}
 @endsection
 
 @section('description')
