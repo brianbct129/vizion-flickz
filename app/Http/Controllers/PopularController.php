@@ -82,7 +82,7 @@ class PopularController extends Controller
             
             // Ambil popular TV shows (batasi sampai 5 halaman untuk performa)
             for ($i = 1; $i <= 5; $i++) {
-                $shows = $this->tmdb->getPopularTVShows($i);
+                $shows = $this->tmdb->getPopularTVShowsPagination($i);
                 if (!empty($shows['results'])) {
                     // Filter hanya TV shows yang belum diproses
                     $uniqueShows = collect($shows['results'])->filter(function($show) use (&$processedIds) {

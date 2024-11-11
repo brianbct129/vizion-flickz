@@ -699,60 +699,67 @@ class TMDBService
         }
     }
 
-    public function getPopularTVShows($page = 1)
+    public function getPopularTVShowsPagination($page = 1, $endpoint = 'tv/popular')
     {
         try {
-            $response = $this->client->request('GET', 'tv/popular', [
-                'query' => [
-                    'language' => 'en-US',  // Tetap en-US untuk metadata
-                    'page' => $page,
-                    'include_adult' => false,
-                    'vote_count.gte' => 50,
-                    'vote_average.gte' => 5.0,
-                    'vote_average.lte' => 10.0
-                ]
-            ]);
+            $query = [
+                'language' => 'en-US',
+                'page' => $page,
+                'include_adult' => false,
+                'vote_count.gte' => 50,
+            ];
+            
+            // Tambahkan parameter khusus untuk endpoint tv/popular
+            if ($endpoint === 'tv/popular') {
+                $query['vote_average.gte'] = 5.0;
+                $query['vote_average.lte'] = 10.0;
+            } else {
+                $query['sort_by'] = 'popularity.desc';
+            }
 
+            $response = $this->client->request('GET', $endpoint, ['query' => $query]);
             $result = json_decode($response->getBody());
-            
-            // Genre IDs yang akan diexclude:
-            // 99 = Documentary
-            // 10764 = Reality
-            // 10767 = Talk Show
-            // 10763 = News
-            // 10766 = Soap (Optional, tergantung apakah ingin include soap opera)
-            $excludedGenres = [99, 10764, 10767, 10763, 10766];
-            
+
+            // Genre dan keyword yang akan diexclude
+            $excludedGenres = [99, 10764, 10767, 10763, 10766]; // Documentary, Reality, Talk Show, News, Soap
+            $excludedKeywords = [
+                'tonight show', 'late show', 'late late show', 
+                'daily show', 'talk show', 'live with', 
+                'tonight with', 'late night with', 'morning show'
+            ];
+
             return [
                 'results' => collect($result->results)
-                    ->filter(function($show) use ($excludedGenres) {
-                        // Cek apakah show memiliki genre yang diexclude
-                        $hasExcludedGenre = isset($show->genre_ids) && 
-                                          count(array_intersect($show->genre_ids, $excludedGenres)) > 0;
-                        
-                        // Tambahan filter untuk judul yang mengandung kata-kata tertentu
-                        $titleLower = strtolower($show->name);
-                        $excludedKeywords = [
-                            'tonight show', 'late show', 'late late show', 
-                            'daily show', 'talk show', 'live with', 
-                            'tonight with', 'late night with', 'morning show'
-                        ];
-                        
-                        $hasTalkShowKeywords = false;
-                        foreach ($excludedKeywords as $keyword) {
-                            if (str_contains($titleLower, $keyword)) {
-                                $hasTalkShowKeywords = true;
-                                break;
+                    ->filter(function($show) use ($excludedGenres, $excludedKeywords) {
+                        // Basic filters
+                        if (empty($show->poster_path) || empty($show->first_air_date)) {
+                            return false;
+                        }
+
+                        // Genre filter
+                        if (!empty($show->genre_ids)) {
+                            $hasExcludedGenre = collect($show->genre_ids)
+                                ->intersect($excludedGenres)
+                                ->isNotEmpty();
+                            if ($hasExcludedGenre) {
+                                return false;
                             }
                         }
-                        
-                        return !empty($show->poster_path) && 
-                               !empty($show->first_air_date) &&
-                               $show->vote_average >= 5.0 && 
-                               $show->vote_average <= 10.0 &&
-                               !$hasExcludedGenre && // Exclude genre yang tidak diinginkan
-                               !$hasTalkShowKeywords && // Exclude berdasarkan keyword di judul
-                               $show->vote_count >= 50;
+
+                        // Keyword filter
+                        $showName = strtolower($show->name);
+                        foreach ($excludedKeywords as $keyword) {
+                            if (str_contains($showName, $keyword)) {
+                                return false;
+                            }
+                        }
+
+                        // Rating filter (hanya untuk tv/popular)
+                        if ($show->vote_average < 5.0 || $show->vote_average > 10.0) {
+                            return false;
+                        }
+
+                        return $show->vote_count >= 50;
                     })
                     ->map(function($show) {
                         return (object)[
@@ -771,7 +778,7 @@ class TMDBService
                 'current_page' => $result->page
             ];
         } catch (\Exception $e) {
-            \Log::error('TMDB Popular TV Shows Error: ' . $e->getMessage());
+            \Log::error('TMDB TV Shows Error: ' . $e->getMessage());
             return ['results' => collect([]), 'total_pages' => 0, 'current_page' => 1];
         }
     }
@@ -913,76 +920,94 @@ class TMDBService
         }
     }
 
-    public function getPopularShows($page = 1)
-    {
-        try {
-            $response = $this->client->request('GET', 'discover/tv', [
-                'query' => [
-                    'language' => 'en-US',
-                    'sort_by' => 'popularity.desc',
-                    'page' => $page,
-                    'include_adult' => false,
-                    'vote_count.gte' => 50,
-                ]
-            ]);
+    public function getPopularTVShows($endpoint = 'tv/popular')
+{
+    try {
+        $query = [
+            'language' => 'en-US',
+            'include_adult' => false,
+            'vote_count.gte' => 50,
+        ];
+        
+        if ($endpoint === 'tv/popular') {
+            $query['vote_average.gte'] = 5.0;
+            $query['vote_average.lte'] = 10.0;
+        } else {
+            $query['sort_by'] = 'popularity.desc';
+        }
 
-            $result = json_decode($response->getBody());
+        // Get first page to know total pages
+        $query['page'] = 1;
+        $response = $this->client->request('GET', $endpoint, ['query' => $query]);
+        $firstResult = json_decode($response->getBody());
+        $totalPages = min($firstResult->total_pages, 5); // Limit to 5 pages to avoid too many requests
+        
+        $allResults = collect($firstResult->results);
 
-            // Define excluded genres and keywords
-            $excludedGenres = [99, 10764, 10767, 10763, 10766]; // Documentary, Reality, Talk Show, News, Soap
-            $excludedKeywords = [
-                'tonight show', 'late show', 'late late show', 
-                'daily show', 'talk show', 'live with', 
-                'tonight with', 'late night with', 'morning show'
-            ];
+        // Fetch remaining pages
+        for ($page = 2; $page <= $totalPages; $page++) {
+            $query['page'] = $page;
+            $response = $this->client->request('GET', $endpoint, ['query' => $query]);
+            $pageResult = json_decode($response->getBody());
+            $allResults = $allResults->concat($pageResult->results);
+        }
 
-            return [
-                'results' => collect($result->results)
-                    ->filter(function($show) use ($excludedGenres, $excludedKeywords) {
-                        // Basic filters
-                        if (empty($show->poster_path) || empty($show->first_air_date)) {
+        // Genre dan keyword yang akan diexclude
+        $excludedGenres = [99, 10764, 10767, 10763, 10766];
+        $excludedKeywords = [
+            'tonight show', 'late show', 'late late show', 
+            'daily show', 'talk show', 'live with', 
+            'tonight with', 'late night with', 'morning show'
+        ];
+
+        return [
+            'results' => $allResults
+                ->filter(function($show) use ($excludedGenres, $excludedKeywords) {
+                    if (empty($show->poster_path) || empty($show->first_air_date)) {
+                        return false;
+                    }
+
+                    if (!empty($show->genre_ids)) {
+                        $hasExcludedGenre = collect($show->genre_ids)
+                            ->intersect($excludedGenres)
+                            ->isNotEmpty();
+                        if ($hasExcludedGenre) {
                             return false;
                         }
+                    }
 
-                        // Genre filter
-                        if (!empty($show->genre_ids)) {
-                            $hasExcludedGenre = collect($show->genre_ids)
-                                ->intersect($excludedGenres)
-                                ->isNotEmpty();
-                            if ($hasExcludedGenre) {
-                                return false;
-                            }
+                    $showName = strtolower($show->name);
+                    foreach ($excludedKeywords as $keyword) {
+                        if (str_contains($showName, $keyword)) {
+                            return false;
                         }
+                    }
 
-                        // Keyword filter
-                        $showName = strtolower($show->name);
-                        foreach ($excludedKeywords as $keyword) {
-                            if (str_contains($showName, $keyword)) {
-                                return false;
-                            }
-                        }
+                    if ($show->vote_average < 5.0 || $show->vote_average > 10.0) {
+                        return false;
+                    }
 
-                        return true;
-                    })
-                    ->map(function($show) {
-                        return (object)[
-                            'id' => $show->id,
-                            'title' => $show->name,
-                            'poster_path' => $show->poster_path,
-                            'release_date' => $show->first_air_date,
-                            'media_type' => 'tv',
-                            'vote_average' => $show->vote_average,
-                            'popularity' => $show->popularity,
-                            'genre_ids' => $show->genre_ids ?? []
-                        ];
-                    })
-                    ->values(),
-                'total_pages' => $result->total_pages,
-                'current_page' => $result->page
-            ];
-        } catch (\Exception $e) {
-            \Log::error('TMDB Popular Shows Error: ' . $e->getMessage());
-            return ['results' => collect([]), 'total_pages' => 0, 'current_page' => 1];
-        }
+                    return $show->vote_count >= 50;
+                })
+                ->map(function($show) {
+                    return (object)[
+                        'id' => $show->id,
+                        'title' => $show->name,
+                        'poster_path' => $show->poster_path,
+                        'release_date' => $show->first_air_date,
+                        'media_type' => 'tv',
+                        'vote_average' => $show->vote_average,
+                        'popularity' => $show->popularity,
+                        'genre_ids' => $show->genre_ids ?? []
+                    ];
+                })
+                ->values()
+        ];
+    } catch (\Exception $e) {
+        \Log::error('TMDB TV Shows Error: ' . $e->getMessage());
+        return ['results' => collect([])];
     }
+}
+
+    
 } 

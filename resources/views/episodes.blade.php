@@ -217,7 +217,7 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
                 </div>
             </div>
             <div class="row">
-                @foreach($similarShowEpisodes as $show)
+                @foreach($popularTVShowsEpisodesPage as $show)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                         <a href="{{ route('tv.show', $show->id) }}">
                             <div class="movie-card general-card">

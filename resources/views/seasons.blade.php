@@ -177,7 +177,7 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
     <!-- market-single-area-end -->
 
     <!-- top-collection-area -->
-    @if(isset($similarShows) && $similarShows->isNotEmpty())
+    @if(isset($popularShows) && $popularShows->isNotEmpty())
         <section class="top-collection-area live-auctions-area">
             <div class="container">
                 <div class="row">
@@ -188,7 +188,7 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
                     </div>
                 </div>
                 <div class="row">
-                    @foreach($similarShows as $show)
+                    @foreach($popularShows as $show)
                         <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                             <a href="{{ route('tv.show', $show->id) }}">
                             <div class="movie-card general-card">

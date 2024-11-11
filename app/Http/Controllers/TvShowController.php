@@ -36,13 +36,11 @@ class TvShowController extends Controller
             }
 
             // Cache popular shows
-            $popularShowsCacheKey = "popular_shows_data";
-            $popularShowsData = Cache::remember($popularShowsCacheKey, $this->cache_ttl, function() {
-                $tmdbService = app(TMDBService::class);
-                return $tmdbService->getPopularShows();
-            });
-            
-            $similarShows = collect($popularShowsData['results'] ?? [])->take(6);
+            $tmdbService = app(TMDBService::class);
+            $popularShowsData = $tmdbService->getPopularTVShows();
+            $popularShows = collect($popularShowsData['results'] ?? [])
+                ->shuffle()
+                ->take(6);
 
             // Existing seasons caching logic remains unchanged
             $seasons = collect($tvShow->seasons)->filter(function($season) {
@@ -69,7 +67,7 @@ class TvShowController extends Controller
 
             $crew = collect($tvShow->credits->crew ?? [])
                 ->filter(fn($person) => !empty($person->profile_path))
-                ->take(10)
+                ->take(8)
                 ->values();
 
             // Cache active season
@@ -84,7 +82,7 @@ class TvShowController extends Controller
                 'cast' => $cast,
                 'crew' => $crew,
                 'videos' => $tvShow->videos->results ?? [],
-                'similarShows' => $similarShows,
+                'popularShows' => $popularShows,
                 'activeSeason' => $activeSeason
             ]);
 
@@ -203,11 +201,13 @@ class TvShowController extends Controller
 
             // Get popular shows using the TMDBService for similar shows
             $tmdbService = app(TMDBService::class);
-            $popularShowsData = $tmdbService->getPopularShows();
-            $similarShowEpisodes = collect($popularShowsData['results'] ?? [])->take(6);
+            $popularShowsData = $tmdbService->getPopularTVShows();
+            $popularTVShowsEpisodesPage = collect($popularShowsData['results'] ?? [])
+                ->shuffle()
+                ->take(6);
 
             // Debug: Log the similar shows
-            \Log::info('Similar Show Episodes:', $similarShowEpisodes->toArray());
+            \Log::info('Similar Show Episodes:', $popularTVShowsEpisodesPage->toArray());
 
             return view('episodes', [
                 'tvShow' => $tvShow,
@@ -217,7 +217,7 @@ class TvShowController extends Controller
                 'nextEpisode' => $nextEpisode,
                 'cast' => array_slice($tvShow->credits->cast ?? [], 0, 8),
                 'crew' => array_slice($tvShow->credits->crew ?? [], 0, 8),
-                'similarShowEpisodes' => $similarShowEpisodes
+                'popularTVShowsEpisodesPage' => $popularTVShowsEpisodesPage
             ]);
 
         } catch (\Exception $e) {
