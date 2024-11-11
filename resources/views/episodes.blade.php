@@ -42,6 +42,7 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"
+                                    referrerpolicy="origin"
                                     allowfullscreen></iframe>
                         </div>
                         <div class="standard-blog-content">

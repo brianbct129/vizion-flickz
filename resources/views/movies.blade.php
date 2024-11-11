@@ -42,6 +42,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                             <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
                                     frameborder="0" 
                                     allowfullscreen
+                                    referrerpolicy="origin"
                                     loading="lazy"></iframe>
                         </div>
                         <div class="standard-blog-content">
