@@ -57,8 +57,9 @@ class MovieController extends Controller
                     // Filter tahun, bahasa, dan rating
                     return $releaseDate->year >= 1999 && 
                            $movie->original_language === 'en' && 
-                           ($movie->vote_average ?? 0) >= 7.0;
+                           ($movie->vote_average ?? 0) >= 5.0;
                 })
+                ->shuffle()
                 ->take(6)
                 ->values();
 
