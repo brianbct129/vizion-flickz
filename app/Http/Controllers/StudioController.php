@@ -33,7 +33,7 @@ class StudioController extends Controller
                         // Filter: skip dokumenter dan film dengan rating < 7
                         $filteredMovies = collect($movies['results'])->reject(function($movie) {
                             return (isset($movie->genre_ids) && in_array(99, $movie->genre_ids)) || 
-                                   (isset($movie->vote_average) && $movie->vote_average < 7);
+                                   (isset($movie->vote_average) && $movie->vote_average < 5);
                         });
                         $allMarvelMovies = $allMarvelMovies->merge($filteredMovies);
                     }
