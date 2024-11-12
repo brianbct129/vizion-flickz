@@ -24,7 +24,7 @@ class StudioController extends Controller
             $allMarvelTVShows = collect();
             
             // Ambil semua movie Marvel yang tersedia (batasi sampai 5 halaman untuk performa)
-            $studioIds = [420, 7505]; // Marvel Studios dan Marvel Entertainment
+            $studioIds = [420, 7505, 160251]; // Marvel Studios, Marvel Entertainment, dan Marvel Entertainment Group
             
             foreach ($studioIds as $studioId) {
                 for ($i = 1; $i <= 5; $i++) {
