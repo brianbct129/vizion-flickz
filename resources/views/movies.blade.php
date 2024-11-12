@@ -45,7 +45,20 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                                     referrerpolicy="origin"
                                     loading="lazy"></iframe>
                         </div>
+                       
                         <div class="standard-blog-content">
+                            <ul class="standard-blog-meta">
+                                <li>
+                                    <a href="/">
+                                        <i class="fa fa-star text-primary"></i>{{ number_format($movie->vote_average, 1) }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <i class="flaticon-calendar"></i>{{ \Carbon\Carbon::parse($movie->release_date)->format('d M Y') }}
+                                    </a>
+                                </li>
+                            </ul>
                             <h4 class="title">{{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->format('Y') }})</h4>
                             <p>{{ $movie->overview }}</p>
                             <div class="blog-line"></div>
