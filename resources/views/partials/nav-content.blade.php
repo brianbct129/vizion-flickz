@@ -25,33 +25,33 @@
     <div class="navbar-wrap main-menu d-none d-lg-flex">
         <ul class="navigation">
             <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="/">Home</a></li>
-            <li class="menu-item-has-children {{ request()->is('studio/*') || request()->is('popular/movies') ? 'active' : '' }}">
-                <a href="#">Movies</a>
-                <ul class="submenu">
-                    <li class="{{ request()->is('studio/marvel') ? 'active' : '' }}">
-                        <a href="{{ route('studio.marvel') }}" 
-                           class="{{ request()->is('studio/marvel') ? 'active' : '' }}">Marvel Universe</a>
-                    </li>
-                    <li class="{{ request()->is('studio/dc') ? 'active' : '' }}">
-                        <a href="{{ route('studio.dc') }}" 
-                           class="{{ request()->is('studio/dc') ? 'active' : '' }}">DC Universe</a>
-                    </li>
-                    <li class="{{ request()->is('popular/movies') ? 'active' : '' }}">
-                        <a href="{{ route('popular.movies') }}" 
-                           class="{{ request()->is('popular/movies') ? 'active' : '' }}">Popular Movies</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="menu-item-has-children {{ request()->is('popular/shows') || request()->is('kdrama') ? 'active' : '' }}">
+            <li class="{{ request()->is('popular/movies') ? 'active' : '' }}"><a href="{{ route('popular.movies') }}">Movies</a></li>
+            <li class="menu-item-has-children {{ request()->is('popular/shows') || request()->is('kdrama') || request()->is('studio/*') ? 'active' : '' }}">
                 <a href="#">TV Shows</a>
                 <ul class="submenu">
-                    <li class="{{ request()->is('popular/shows') ? 'active' : '' }}">
+                    <li class="{{ request()->routeIs('popular.tvshows') ? 'active' : '' }}">
                         <a href="{{ route('popular.tvshows') }}" 
-                           class="{{ request()->is('popular/shows') ? 'active' : '' }}">Popular Shows</a>
+                           class="{{ request()->routeIs('popular.tvshows') ? 'active' : '' }}">
+                           Popular Shows
+                        </a>
                     </li>
-                    <li class="{{ request()->is('kdrama') ? 'active' : '' }}">
+                    <li class="{{ request()->routeIs('drakor.index') ? 'active' : '' }}">
                         <a href="{{ route('drakor.index') }}" 
-                           class="{{ request()->is('kdrama') ? 'active' : '' }}">Korean Drama</a>
+                           class="{{ request()->routeIs('drakor.index') ? 'active' : '' }}">
+                           Korean Drama
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('studio.marvel') ? 'active' : '' }}">
+                        <a href="{{ route('studio.marvel') }}" 
+                           class="{{ request()->routeIs('studio.marvel') ? 'active' : '' }}">
+                           Marvel Universe
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('studio.dc') ? 'active' : '' }}">
+                        <a href="{{ route('studio.dc') }}" 
+                           class="{{ request()->routeIs('studio.dc') ? 'active' : '' }}">
+                           DC Universe
+                        </a>
                     </li>
                 </ul>
             </li>
