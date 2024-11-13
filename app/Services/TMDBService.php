@@ -621,16 +621,17 @@ class TMDBService
         }
     }
 
-    public function getMarvelTVShows($page = 1)
+    public function getMarvelTVShows($studioId, $page = 1)
     {
         try {
             $response = $this->client->request('GET', 'discover/tv', [
                 'query' => [
-                    'with_companies' => 420,  // Marvel Studios
+                    'with_companies' => $studioId,
                     'language' => 'en-US',
                     'sort_by' => 'first_air_date.desc',
                     'include_adult' => false,
                     'vote_count.gte' => 50,
+                    'vote_average.gte' => 5.0,
                     'first_air_date.gte' => '2013-01-01',
                     'page' => $page
                 ]
@@ -669,16 +670,18 @@ class TMDBService
         }
     }
 
-    public function getDCTVShows($page = 1)
+    public function getDCTVShows($studioId, $page = 1)
     {
         try {
             $response = $this->client->request('GET', 'discover/tv', [
                 'query' => [
-                    'with_companies' => 9993,  // DC Studios
+                    'with_companies' => $studioId,
                     'language' => 'en-US',
                     'sort_by' => 'first_air_date.desc',
                     'include_adult' => false,
                     'vote_count.gte' => 50,
+                    'vote_average.gte' => 5.0,
+                    'first_air_date.gte' => '2013-01-01',
                     'page' => $page
                 ]
             ]);
@@ -691,7 +694,8 @@ class TMDBService
                         return !empty($show->poster_path) && 
                                !empty($show->first_air_date) &&
                                $show->original_language === 'en' &&
-                               (!isset($show->genre_ids) || !in_array(99, $show->genre_ids)); // Filter Documentary
+                               substr($show->first_air_date, 0, 4) >= 2013 &&
+                               (!isset($show->genre_ids) || !in_array(99, $show->genre_ids));
                     })
                     ->map(function($show) {
                         return (object)[

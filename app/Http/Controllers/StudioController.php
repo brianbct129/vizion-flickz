@@ -23,14 +23,14 @@ class StudioController extends Controller
             $allMarvelMovies = collect();
             $allMarvelTVShows = collect();
             
-            // Ambil semua movie Marvel yang tersedia (batasi sampai 5 halaman untuk performa)
-            $studioIds = [420, 7505, 160251]; // Marvel Studios, Marvel Entertainment, dan Marvel Entertainment Group
+            // Studio IDs untuk Movies
+            $movieStudioIds = [420, 7505, 160251]; // Marvel Studios, Marvel Entertainment, Marvel Entertainment Group
             
-            foreach ($studioIds as $studioId) {
+            // Get Marvel Movies
+            foreach ($movieStudioIds as $studioId) {
                 for ($i = 1; $i <= 5; $i++) {
                     $movies = $this->tmdb->getStudioContent($studioId, $i);
                     if (!empty($movies['results'])) {
-                        // Filter: skip dokumenter dan film dengan rating < 7
                         $filteredMovies = collect($movies['results'])->reject(function($movie) {
                             return (isset($movie->genre_ids) && in_array(99, $movie->genre_ids)) || 
                                    (isset($movie->vote_average) && $movie->vote_average < 5);
@@ -40,37 +40,43 @@ class StudioController extends Controller
                 }
             }
             
-            // Menghilangkan duplikat berdasarkan ID film
+            // Menghilangkan duplikat movies
             $allMarvelMovies = $allMarvelMovies->unique('id');
             
-            // Ambil TV Shows Marvel (batasi sampai 5 halaman)
-            for ($i = 1; $i <= 5; $i++) {
-                $tvShows = $this->tmdb->getMarvelTVShows($i);
-                if (!empty($tvShows['results'])) {
-                    // Filter: skip item jika salah satu genrenya adalah Documentary
-                    $filteredTVShows = collect($tvShows['results'])->reject(function($show) {
-                        return isset($show->genre_ids) && in_array(99, $show->genre_ids);
-                    });
-                    $allMarvelTVShows = $allMarvelTVShows->merge($filteredTVShows);
+            // Studio IDs untuk TV Shows
+            $tvStudioIds = [420, 38679]; // Marvel Studios dan Marvel Entertainment Group
+            
+            // Get Marvel TV Shows
+            foreach ($tvStudioIds as $studioId) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $tvShows = $this->tmdb->getMarvelTVShows($studioId, $i);
+                    if (!empty($tvShows['results'])) {
+                        $filteredTVShows = collect($tvShows['results'])->reject(function($show) {
+                            return (isset($show->genre_ids) && in_array(99, $show->genre_ids)) || 
+                                   (isset($show->vote_average) && $show->vote_average < 5);
+                        });
+                        $allMarvelTVShows = $allMarvelTVShows->merge($filteredTVShows);
+                    }
                 }
             }
+
+            // Menghilangkan duplikat TV Shows
+            $allMarvelTVShows = $allMarvelTVShows->unique('id');
 
             // Gabungkan dan urutkan semua konten
             $allContent = $allMarvelMovies->merge($allMarvelTVShows)
                 ->sortByDesc('release_date')
                 ->values();
 
-            // Hitung total halaman yang sebenarnya
+            // Pagination logic
             $totalItems = $allContent->count();
             $itemsPerPage = 12;
             $totalPages = ceil($totalItems / $itemsPerPage);
 
-            // Jika halaman yang diminta melebihi total, redirect ke halaman terakhir
             if ($page > $totalPages) {
                 return redirect()->route('studio.marvel', ['page' => $totalPages]);
             }
 
-            // Ambil konten untuk halaman yang diminta
             $offset = ($page - 1) * $itemsPerPage;
             $pageContent = $allContent->slice($offset, $itemsPerPage)->values();
 
@@ -96,38 +102,60 @@ class StudioController extends Controller
             $allDCMovies = collect();
             $allDCTVShows = collect();
             
-            // Ambil semua movie DC yang tersedia (batasi sampai 5 halaman untuk performa)
-            for ($i = 1; $i <= 5; $i++) {
-                $movies = $this->tmdb->getStudioContent(9993, $i); // 9993 adalah ID DC Studios
-                if (!empty($movies['results'])) {
-                    $allDCMovies = $allDCMovies->merge($movies['results']);
+            // Studio IDs untuk Movies
+            $movieStudioIds = [128064, 429, 9993]; // DC Studios, DC Entertainment, Warner Bros. Pictures
+            
+            // Get DC Movies
+            foreach ($movieStudioIds as $studioId) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $movies = $this->tmdb->getStudioContent($studioId, $i);
+                    if (!empty($movies['results'])) {
+                        $filteredMovies = collect($movies['results'])->reject(function($movie) {
+                            return (isset($movie->genre_ids) && in_array(99, $movie->genre_ids)) || 
+                                   (isset($movie->vote_average) && $movie->vote_average < 5);
+                        });
+                        $allDCMovies = $allDCMovies->merge($filteredMovies);
+                    }
                 }
             }
             
-            // Ambil TV Shows DC (batasi sampai 5 halaman)
-            for ($i = 1; $i <= 5; $i++) {
-                $tvShows = $this->tmdb->getDCTVShows($i);
-                if (!empty($tvShows['results'])) {
-                    $allDCTVShows = $allDCTVShows->merge($tvShows['results']);
+            // Menghilangkan duplikat movies
+            $allDCMovies = $allDCMovies->unique('id');
+            
+            // Studio IDs untuk TV Shows
+            $tvStudioIds = [128064, 429, 9993]; // DC Studios dan DC Entertainment
+            
+            // Get DC TV Shows
+            foreach ($tvStudioIds as $studioId) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $tvShows = $this->tmdb->getDCTVShows($studioId, $i);
+                    if (!empty($tvShows['results'])) {
+                        $filteredTVShows = collect($tvShows['results'])->reject(function($show) {
+                            return (isset($show->genre_ids) && in_array(99, $show->genre_ids)) || 
+                                   (isset($show->vote_average) && $show->vote_average < 5);
+                        });
+                        $allDCTVShows = $allDCTVShows->merge($filteredTVShows);
+                    }
                 }
             }
+
+            // Menghilangkan duplikat TV Shows
+            $allDCTVShows = $allDCTVShows->unique('id');
 
             // Gabungkan dan urutkan semua konten
             $allContent = $allDCMovies->merge($allDCTVShows)
                 ->sortByDesc('release_date')
                 ->values();
 
-            // Hitung total halaman yang sebenarnya
+            // Pagination logic
             $totalItems = $allContent->count();
-            $itemsPerPage = 18;
+            $itemsPerPage = 12;
             $totalPages = ceil($totalItems / $itemsPerPage);
 
-            // Jika halaman yang diminta melebihi total, redirect ke halaman terakhir
             if ($page > $totalPages) {
                 return redirect()->route('studio.dc', ['page' => $totalPages]);
             }
 
-            // Ambil konten untuk halaman yang diminta
             $offset = ($page - 1) * $itemsPerPage;
             $pageContent = $allContent->slice($offset, $itemsPerPage)->values();
 
