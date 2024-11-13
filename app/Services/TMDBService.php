@@ -472,6 +472,22 @@ class TMDBService
         }
     }
 
+    public function getTvGenres()
+    {
+        try {
+            $response = $this->client->request('GET', 'genre/tv/list', [
+                'query' => [
+                    'language' => 'en-US'
+                ]
+            ]);
+
+            return json_decode($response->getBody())->genres;
+        } catch (\Exception $e) {
+            \Log::error('TMDB TV Genre Error: ' . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getMoviesByGenre($genreId, $page = 1)
     {
         try {

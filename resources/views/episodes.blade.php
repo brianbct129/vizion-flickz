@@ -54,8 +54,15 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
                                     <ul>
                                         <li class="title">Genres :</li>
                                         @foreach($tvShow->genres as $genre)
-                                            <li><a href="#">{{ $genre->name }}{{ !$loop->last ? ',' : '' }}</a></li>
-                                        @endforeach
+                                            <li>
+                                                <a href="{{ route('genres.show', [
+                                                    'id' => $genre->id, 
+                                                    'name' => Str::slug(str_replace(['&', ' '], ['-and-', '-'], $genre->name))
+                                                ]) }}">
+                                                    {{ $genre->name }}{{ !$loop->last ? ',' : '' }}
+                                                </a>
+                                        </li>
+                                    @endforeach
                                     </ul>
                                 </div>
                                 <div class="blog-details-social">

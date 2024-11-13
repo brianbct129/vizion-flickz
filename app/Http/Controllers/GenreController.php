@@ -18,6 +18,18 @@ class GenreController extends Controller
         try {
             $page = request('page', 1);
             
+            // Get both movie and TV genres
+            $movieGenres = collect($this->tmdb->getMenuGenres());
+            $tvGenres = collect($this->tmdb->getTvGenres());
+            
+            // Find genre in either movie or TV genres
+            $currentGenre = $movieGenres->firstWhere('id', (int)$id) ?? 
+                           $tvGenres->firstWhere('id', (int)$id);
+
+            if (!$currentGenre) {
+                abort(404, 'Genre not found');
+            }
+
             // Collect all content for better pagination
             $allMovies = collect();
             $allTVShows = collect();
@@ -38,10 +50,6 @@ class GenreController extends Controller
                 }
             }
             
-            // Get current genre info
-            $currentGenre = collect($this->tmdb->getMenuGenres())
-                ->firstWhere('id', $id);
-
             // Merge all content and sort by popularity
             $allContent = $allMovies->merge($allTVShows)
                 ->sortByDesc('popularity')
@@ -68,6 +76,7 @@ class GenreController extends Controller
             return view('genres.show', [
                 'content' => $pageContent,
                 'currentGenre' => $currentGenre,
+                'genres' => $movieGenres->merge($tvGenres)->unique('id'), // Merge both genre types
                 'currentPage' => (int) $page,
                 'totalPages' => $totalPages,
                 'genreId' => $id,
