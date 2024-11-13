@@ -5,7 +5,15 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
 @endsection
 
 @section('description')
-{{ $movie->overview }}
+    {{ Str::limit($movie->overview, 160) }}
+@endsection
+
+@section('keywords')
+    {{ $movie->title }}, movie, film, watch online, streaming, {{ $genres->pluck('name')->implode(', ') }}
+@endsection
+
+@section('og_image')
+    {{ 'https://image.tmdb.org/t/p/w500' . $movie->poster_path }}
 @endsection
 
 @section('content')
@@ -43,6 +51,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                                     frameborder="0" 
                                     allowfullscreen
                                     referrerpolicy="origin"
+                                    decoding="async"
                                     loading="lazy"></iframe>
                         </div>
                        
@@ -50,7 +59,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                             <ul class="standard-blog-meta">
                                 <li>
                                     <a href="/">
-                                        <i class="fa fa-star text-primary"></i>{{ number_format($movie->vote_average, 1) }}
+                                        <i class="fa fa-star text-light"></i>{{ number_format($movie->vote_average, 1) }}
                                     </a>
                                 </li>
                                 <li>
@@ -66,9 +75,13 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                                 <div class="blog-details-tags">
                                     <ul>
                                         <li class="title">Genres :</li>
-                                        @foreach($genres as $genre)
-                                            <li><a href="#">{{ $genre->name }}{{ !$loop->last ? ',' : '' }}</a></li>
-                                        @endforeach
+                                        @foreach($movie->genres as $genre)
+                                        <li>
+                                            <a href="{{ route('genres.show', ['id' => $genre->id, 'name' => Str::slug($genre->name)]) }}">
+                                                {{ $genre->name }}{{ !$loop->last ? ',' : '' }}
+                                            </a>
+                                        </li>
+                                    @endforeach
                                     </ul>
                                 </div>
                                 <div class="blog-details-social">
@@ -208,4 +221,29 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
 
 
 @section('third_script')
+ <!-- Schema.org Movie markup -->
+ <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Movie",
+        "name": "{{ $movie->title }}",
+        "description": "{{ $movie->overview }}",
+        "image": "{{ 'https://image.tmdb.org/t/p/w500' . $movie->poster_path }}",
+        "datePublished": "{{ $movie->release_date }}",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ $movie->vote_average }}",
+            "reviewCount": "{{ $movie->vote_count }}"
+        },
+        "genre": {!! json_encode($genres->pluck('name')->toArray()) !!},
+        "actor": [
+            @foreach(collect($cast)->take(5) as $actor)
+            {
+                "@type": "Person",
+                "name": "{{ $actor->name }}"
+            }@if(!$loop->last),@endif
+            @endforeach
+        ]
+    }
+    </script>
 @endsection
