@@ -1,11 +1,19 @@
 @extends('layouts.app2')
 
 @section('title')
-Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }}) - Season {{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }} Episode {{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}
+    {{ $tvShow->name }} Season {{ $season->season_number }} Episode {{ $episode->episode_number }}: {{ $episode->name }}
 @endsection
 
 @section('description')
-{{ $episode->overview }}
+    {{ Str::limit($episode->overview, 160) }}
+@endsection
+
+@section('keywords')
+    {{ $tvShow->name }}, season {{ $season->season_number }}, episode {{ $episode->episode_number }}, {{ $episode->name }}, watch online
+@endsection
+
+@section('og_image')
+    {{ 'https://image.tmdb.org/t/p/w500' . ($episode->still_path ?? $tvShow->poster_path) }}
 @endsection
 
 @section('content')
@@ -256,4 +264,26 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
 
 
 @section('third_script')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ $tvShow->name }}",
+            "item": "{{ route('tv.show', $tvShow->id) }}"
+        },{
+            "@type": "ListItem",
+            "position": 3,
+            "name": "S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}",
+            "item": "{{ route('tv.episode', ['id' => $tvShow->id, 'season' => $season->season_number, 'episode' => $episode->episode_number]) }}"
+        }]
+    }
+    </script>
 @endsection

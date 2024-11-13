@@ -1,11 +1,19 @@
 @extends('layouts.app2')
 
 @section('title')
-Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }})
+    {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }}) - Watch TV Shows Online
 @endsection
 
 @section('description')
-{{ $tvShow->overview }}
+    {{ Str::limit($tvShow->overview, 160) }}
+@endsection
+
+@section('keywords')
+    {{ $tvShow->name }}, tv series, watch online, streaming, {{ implode(', ', array_column($tvShow->genres, 'name')) }}
+@endsection
+
+@section('og_image')
+    {{ 'https://image.tmdb.org/t/p/w500' . $tvShow->poster_path }}
 @endsection
 
 @section('preloader')
@@ -220,4 +228,19 @@ Watch {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->fo
 
 
 @section('third_script')
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TVSeries",
+        "name": "{{ $tvShow->name }}",
+        "description": "{{ $tvShow->overview }}",
+        "image": "{{ 'https://image.tmdb.org/t/p/w500' . $tvShow->poster_path }}",
+        "datePublished": "{{ $tvShow->first_air_date }}",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ $tvShow->vote_average }}",
+            "reviewCount": "{{ $tvShow->vote_count }}"
+        }
+    }
+    </script>
 @endsection
