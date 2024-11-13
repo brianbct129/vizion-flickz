@@ -59,6 +59,7 @@ class MovieController extends Controller
                            $movie->original_language === 'en' && 
                            ($movie->vote_average ?? 0) >= 5.0;
                 })
+                ->unique('id')
                 ->shuffle()
                 ->take(6)
                 ->values();

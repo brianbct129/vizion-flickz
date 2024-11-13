@@ -39,6 +39,7 @@ class TvShowController extends Controller
             $tmdbService = app(TMDBService::class);
             $popularShowsData = $tmdbService->getPopularTVShows();
             $popularShows = collect($popularShowsData['results'] ?? [])
+                ->unique('id')
                 ->shuffle()
                 ->take(6);
 
@@ -203,6 +204,7 @@ class TvShowController extends Controller
             $tmdbService = app(TMDBService::class);
             $popularShowsData = $tmdbService->getPopularTVShows();
             $popularTVShowsEpisodesPage = collect($popularShowsData['results'] ?? [])
+                ->unique('id')
                 ->shuffle()
                 ->take(6);
 
