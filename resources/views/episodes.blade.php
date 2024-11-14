@@ -37,7 +37,7 @@
                 <div class="col-12">
                     <div class="market-single-breadcrumb">
                         <div class="home-back-btn"><a href="{{ route('home') }}">go back to home</a></div>
-                        <nav aria-label="breadcrumb">
+                        <nav aria-label="breadcrumb d-none d-lg-block">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('tv.show', $tvShow->id) }}">{{ $tvShow->name }}</a></li>

@@ -30,14 +30,14 @@
 
 @section('content')
     <!-- breadcrumb-area -->
-    <div class="breadcrumb-area market-single-breadcrumb-area d-none d-lg-block">
+    <div class="breadcrumb-area market-single-breadcrumb-area">
         <div class="breadcrumb-bg"></div>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12">
                     <div class="market-single-breadcrumb">
                         <div class="home-back-btn"><a href="/">go back to home</a></div>
-                        <nav aria-label="breadcrumb">
+                        <nav aria-label="breadcrumb d-none d-lg-block">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }})</li>
