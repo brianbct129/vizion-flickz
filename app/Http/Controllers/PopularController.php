@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TMDBService;
+use Illuminate\Http\Request;
 
 class PopularController extends Controller
 {
@@ -11,6 +12,14 @@ class PopularController extends Controller
     public function __construct(TMDBService $tmdb)
     {
         $this->tmdb = $tmdb;
+    }
+
+    public function index(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $shows = $this->tmdb->getPopularTVShowsPagination($page);
+        
+        return response()->json($shows);
     }
 
     public function movies()
