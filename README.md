@@ -1,4 +1,4 @@
-# VizionFlickz Setup Guide
+# VizionFlickz - Movie Streaming Platform
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -7,64 +7,108 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-This document guides you through setting up VizionFlickz, a Laravel-based movie streaming application.
+VizionFlickz is a modern movie streaming platform built with Laravel, offering a seamless experience for movie enthusiasts.
 
-## Prerequisites
+## System Requirements
 
-1. **Composer** (using `composer.phar`)
-2. **PHP** (version 8.0 or higher)
-3. **Database** (e.g., MySQL, PostgreSQL)
-4. **Laravel** (version 11.0 or higher)
+- PHP 8.0 or higher
+- Composer
+- Node.js & NPM
+- MySQL/PostgreSQL database
+- Laravel 11.0 or higher
+- TMDB API key
 
-## Installation Steps
+## Quick Installation Guide
 
-### Step 1: Install Dependencies
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/vizion-flickz.git
+cd vizion-flickz
+```
 
-Run Composer through the `composer.phar` file:
+### 2. Install Dependencies
+Install PHP dependencies using Composer:
 ```bash
 php composer.phar install
 ```
 
-Afterwards, install npm dependencies:
+Install Node.js dependencies:
 ```bash
 npm install
 ```
 
-### Step 2: Create and Configure .env File
-
-Copy the `.env.example` file to create your own `.env` file:
+### 3. Environment Setup
+Copy the environment file:
 ```bash
 cp .env.example .env
 ```
 
-In your `.env` file, add your **TMDB API key** to enable access to movie data. Update the following line:
-```dotenv
-TMDB_READ_ACCESS_TOKEN=your_api_key_here
+Configure your `.env` file with:
+- Database credentials
+- TMDB API key
+- Application settings
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+TMDB_READ_ACCESS_TOKEN=your_tmdb_api_key
 ```
 
-### Step 3: Generate Application Key
-
-Run the following command to generate a unique application key:
+### 4. Application Setup
+Generate application key:
 ```bash
 php artisan key:generate
 ```
 
-### Step 4: Migrate the Database
-
-Ensure your database credentials are set in the `.env` file, then run:
+Run database migrations:
 ```bash
 php artisan migrate
 ```
 
-### Step 5: Serve the Application
+### 5. Build Assets
+For development:
+```bash
+npm run dev
+```
 
-Start the development server:
+For production:
+```bash
+npm run prod
+```
+
+For automatic asset compilation during development:
+```bash
+npm run watch
+```
+
+### 6. Launch Application
+Start the Laravel development server:
 ```bash
 php artisan serve
 ```
 
-Your application should now be running at `http://localhost:8000`.
+Access the application at `http://localhost:8000`
 
----
+## Key Features
+- Movie streaming platform
+- TMDB integration
+- Responsive design
+- User authentication
+- Movie search functionality
+- Category filtering
 
-This guide should provide a smooth start for configuring and launching the VizionFlickz application. Let me know if you need further customization!
+## Development Commands
+- `npm run dev` - Compile assets for development
+- `npm run watch` - Watch for asset changes and recompile
+- `npm run prod` - Compile and minify assets for production
+- `php artisan serve` - Start development server
+
+## Contributing
+Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a Pull Request.
+
+## License
+The VizionFlickz platform is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
