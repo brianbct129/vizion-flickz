@@ -18,12 +18,13 @@
                      style="background: url('https://image.tmdb.org/t/p/original{{ $movie->backdrop_path }}') top center/cover no-repeat;">
                     <div class="banner-area">
                         <div class="container">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-8">
-                                    <div class="banner-content">
+                            <div class="row justify-content-center justify-content-lg-center justify-content-xl-start">
+                                <div class="col-lg-6 col-md-8 col-sm-10">
+                                    <div class="banner-content text-center text-lg-center text-xl-start">
                                         <h2 class="title">{{ $movie->title }}</h2>
                                         <p>{{ $movie->overview }}</p>
-                                        <a href="{{ route('movies.show', $movie->id) }}" class="banner-btn">
+                                        <a href="{{ route('movies.show', $movie->id) }}" 
+                                           class="banner-btn mx-auto mx-lg-0 d-inline-block">
                                             Watch Now <i class="fi-sr-arrow-right"></i>
                                         </a>
                                     </div>
@@ -46,15 +47,7 @@
             @endfor
         </div>
 
-        <!-- Navigation arrows -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+      
     </div>
     <!-- banner-area-end -->
 </div>
@@ -76,7 +69,7 @@
             @foreach($featured as $movie)
             <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                 <a href="{{ route('movies.show', $movie->id) }}">
-                    <div class="movie-card">
+                    <div class="movie-card featured-card">
                         <div class="content-card">
                             <img src="{{ 'https://image.tmdb.org/t/p/w500' . $movie->poster_path }}">
                             <span class="shadow"></span>

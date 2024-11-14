@@ -30,7 +30,7 @@
 
 @section('content')
     <!-- breadcrumb-area -->
-    <div class="breadcrumb-area market-single-breadcrumb-area">
+    <div class="breadcrumb-area market-single-breadcrumb-area d-none d-lg-block">
         <div class="breadcrumb-bg"></div>
         <div class="container">
             <div class="row justify-content-center">

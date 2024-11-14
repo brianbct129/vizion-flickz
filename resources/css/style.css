@@ -1376,6 +1376,7 @@ label {
 }
 .banner-content {
     margin-left: 90px;
+    max-width: 100%;
 }
 .banner-content .title {
     font-size: 70px;
@@ -1390,7 +1391,14 @@ label {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 35px;
-    width: 80%;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Batasi ke 3 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 6.5em; /* 1.5em (line-height) × 3 baris */
+    margin-bottom: 1rem;
 }
 .banner-btn {
     display: inline-flex;
@@ -4476,22 +4484,6 @@ label {
     background: rgba(255, 255, 255, 0.05); /* Semi-transparent background */
     border-radius: 8px;
     margin-top: 5px;
-}
-
-/* Menambahkan style untuk truncate overview text di banner */
-.banner-content p {
-    display: -webkit-box;
-    -webkit-line-clamp: 4; /* Batasi ke 3 baris */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 6.5em; /* 1.5em (line-height) × 3 baris */
-    margin-bottom: 1rem;
-}
-
-/* Pastikan container memiliki width yang tepat */
-.banner-content {
-    max-width: 100%;
 }
 
 .search-item {
