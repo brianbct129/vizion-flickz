@@ -14,7 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        //
+        \DipeshSukhia\LaravelHtmlMinify\Middleware\LaravelMinifyHtml::class
     ];
 
     /**
