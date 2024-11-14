@@ -5,8 +5,9 @@
 	=    		 Preloader			      =
 =============================================*/
 function preloader() {
-	$('#preloader').delay(1).fadeOut();
+	$('#preloader').delay(1000).fadeOut();
 };
+
 $(window).on('load', function () {
 	preloader();
 	wowAnimation();

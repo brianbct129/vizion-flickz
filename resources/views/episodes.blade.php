@@ -16,6 +16,18 @@
     {{ 'https://image.tmdb.org/t/p/w500' . ($episode->still_path ?? $tvShow->poster_path) }}
 @endsection
 
+@section('preloader')
+<div id="preloader">
+    <div id="loading-center">
+        <div id="loading-center-absolute">
+            <div class="object" id="object_one"></div>
+            <div class="object" id="object_two"></div>
+            <div class="object" id="object_three"></div>
+        </div>
+    </div>
+</div>
+@endsection
+
 @section('content')
     <!-- breadcrumb-area -->
     <div class="breadcrumb-area market-single-breadcrumb-area">

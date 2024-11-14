@@ -63,11 +63,6 @@
 <section class="featured-area">
     <div class="container">
         <div class="row mb-25">
-            <div class="col-12">
-                <a href="" rel="nofollow"><img class="w-100" alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/gif/720x90_adsterra_reff.gif" /></a>
-            </div>
-        </div>
-        <div class="row mb-25">
             <div class="col-md-6">
                 <div class="section-title mb-35">
                     <h2 class="title">Featured <img src="img/icons/title_icon01.png" alt=""></h2>
