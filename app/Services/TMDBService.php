@@ -971,7 +971,10 @@ class TMDBService
                 'language' => 'en-US',
                 'include_adult' => false,
                 'vote_average.gte' => 5.0,
-                'sort_by' => 'popularity.desc'
+                'sort_by' => 'popularity.desc',
+                'with_original_language' => 'en|ko|ja', // Menambahkan filter bahasa
+                'with_status' => 'Released|Returning Series', // Hanya show yang sudah rilis
+                'with_type' => 'Scripted|Animation' // Hanya serial skrip dan animasi
             ];
 
             // Get first page to know total pages
@@ -991,7 +994,7 @@ class TMDBService
             }
 
             // Genre yang akan diexclude
-            $excludedGenres = [99, 10764, 10767, 10763, 10766]; // Documentary, Reality, Talk, News, Soap
+            $excludedGenres = [99, 10764, 10767, 10763, 10766]; 
             $excludedKeywords = [
                 'tonight show', 'late show', 'late late show', 
                 'daily show', 'talk show', 'live with', 
@@ -1006,15 +1009,26 @@ class TMDBService
                             return false;
                         }
 
-                        // Filter untuk show dari US, JP (Anime), atau KR saja
-                        if (!isset($show->origin_country)) {
+                        // Filter untuk show dari US, JP, atau KR saja
+                        if (!isset($show->origin_country) || empty($show->origin_country)) {
                             return false;
                         }
 
+                        // Hanya terima show yang dari US, JP, atau KR
                         $allowedCountries = ['US', 'JP', 'KR'];
+                        $originCountries = $show->origin_country;
+                        
+                        // Pastikan semua negara asal ada dalam allowed countries
+                        foreach ($originCountries as $country) {
+                            if (!in_array($country, $allowedCountries)) {
+                                return false;
+                            }
+                        }
+                        
+                        // Pastikan setidaknya satu dari negara yang diizinkan
                         $hasAllowedCountry = false;
-                        foreach ($show->origin_country as $country) {
-                            if (in_array($country, $allowedCountries)) {
+                        foreach ($allowedCountries as $country) {
+                            if (in_array($country, $originCountries)) {
                                 $hasAllowedCountry = true;
                                 break;
                             }
@@ -1056,14 +1070,17 @@ class TMDBService
                             'vote_average' => $show->vote_average,
                             'popularity' => $show->popularity,
                             'genre_ids' => $show->genre_ids ?? [],
-                            'origin_country' => $show->origin_country ?? []
+                            'origin_country' => $show->origin_country ?? [],
+                            'original_language' => $show->original_language ?? null
                         ];
                     })
-                    ->values()
+                    ->values(),
+                'total_pages' => $totalPages,
+                'current_page' => 1
             ];
         } catch (\Exception $e) {
             \Log::error('TMDB TV Shows Error: ' . $e->getMessage());
-            return ['results' => collect([])];
+            return ['results' => collect([]), 'total_pages' => 0, 'current_page' => 1];
         }
     }
 

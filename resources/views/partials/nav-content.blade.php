@@ -80,7 +80,7 @@
             </li>
         </ul>
     </div>
-    <div class="header-action d-none d-xxl-block">
+    <div class="header-action d-none d-xl-block">
         <ul>
             <li class="header-btn"><a href="https://discord.gg/RbBHxF4Z" target="_blank" class="btn"><i class="fab fa-discord me-1"></i> Discord</a></li>
         </ul>
