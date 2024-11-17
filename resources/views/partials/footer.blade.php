@@ -59,7 +59,7 @@
                                    required>
                             <button type="submit" disabled><i class="flaticon-search"></i></button>
                         </form>
-                        <div id="footerSearchResults" class="search-results position-absolute w-100 rounded mt-1" style="max-height: 300px; overflow-y: auto; display: none;">
+                        <div id="footerSearchResults" class="search-results position-absolute w-100 rounded mt-1" style="max-height: 300px; overflow-y: auto; display: none; position: absolute; top: 100%; left: 0; z-index: 9999;">
                             <div id="footerSearchLoading" class="text-center py-4" style="display: none;">
                                 <div class="spinner-border text-light" role="status">
                                     <span class="visually-hidden">Loading...</span>
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div class="copyright-wrap">
+    <div class="copyright-wrap" style="position: relative; z-index: 1;">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">

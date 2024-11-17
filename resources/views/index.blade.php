@@ -180,7 +180,7 @@
 <!-- explore-products-area -->
 <section class="explore-products-area mt-20">
     <div class="container">
-        <div class="row mb-35">
+        <div class="row gy-4 mb-35">
             <div class="col-md-7 col-sm-8">
                 <div class="section-title">
                     <h2 class="title">Explore Anime <img src="img/icons/title_icon01.png" alt=""></h2>
