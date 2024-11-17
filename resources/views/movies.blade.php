@@ -203,7 +203,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row gy-3">
                 @foreach($popularMovies as $popular)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                         <a href="{{ route('movies.show', $popular->id) }}">

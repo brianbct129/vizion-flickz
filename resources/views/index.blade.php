@@ -150,7 +150,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row gy-3">
             @foreach($popular as $item)
             <div class="col-lg-3 col-sm-3 col-6">
                 <a href="{{ $item->media_type === 'movie' ? route('movies.show', $item->id) : route('tv.show', $item->id) }}">

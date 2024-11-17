@@ -70,7 +70,7 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
     <!-- category-area -->
     <div class="category-area">
         <div class="container">
-            <div class="row gy-3">
+            <div class="row">
                 <div class="col-12">
                     <ul class="category-list">
                         @foreach(collect($genres)->take(8) as $genre)
@@ -91,7 +91,7 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
     <section class="explore-products-area">
         <div class="container">
             <!-- Movies Section -->
-            <div class="row">
+            <div class="row gy-3">
                 @foreach($content as $item)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                         <div class="movie-item">
