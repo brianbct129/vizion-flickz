@@ -263,9 +263,6 @@ label {
     padding-left: 15px;
     padding-right: 15px;
 }
-.row {
-    --bs-gutter-x: 30px;
-}
 .row.g-0 {
 	--bs-gutter-x: 0;
 }
@@ -1534,6 +1531,7 @@ label {
     align-items: center;
     padding: 10px 17px;
 }
+
 .cast .thumb {
     width: 62px;
     height: 62px;
@@ -4359,12 +4357,6 @@ label {
 /* Mengatur spacing container */
 .container-fluid {
     padding: 30px 24px;
-}
-
-/* Mengatur gap antar card */
-.row {
-    --bs-gutter-x: 1.5rem; /* Horizontal gap */
-    --bs-gutter-y: 1.5rem; /* Vertical gap */
 }
 
 /* Responsive adjustments */

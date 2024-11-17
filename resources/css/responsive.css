@@ -280,7 +280,7 @@
 .cast {
     display: block;
     padding: 15px 17px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     text-align: center;
 }
 .cast .thumb{
@@ -428,7 +428,7 @@
 .cast {
     display: flex;
     padding: 10px 17px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     text-align: left;
 }
 .cast .thumb {

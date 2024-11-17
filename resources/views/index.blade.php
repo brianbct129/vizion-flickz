@@ -193,7 +193,7 @@
             </div>
         </div>
         
-        <div class="row justify-content-center">
+        <div class="row gy-3 justify-content-center">
             @foreach($animeList as $anime)
             <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                 <a href="{{ $anime->media_type === 'movie' ? route('movies.show', $anime->id) : route('tv.show', $anime->id) }}">

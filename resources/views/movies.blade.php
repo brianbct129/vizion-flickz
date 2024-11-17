@@ -38,7 +38,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                 <div class="col-12">
                     <div class="market-single-breadcrumb">
                         <div class="home-back-btn"><a href="/">go back to home</a></div>
-                        <nav aria-label="breadcrumb">
+                        <nav aria-label="breadcrumb" class="d-none d-lg-block">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">
@@ -60,12 +60,12 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
+                            {{-- <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
                                     frameborder="0" 
                                     allowfullscreen
                                     referrerpolicy="origin"
                                     decoding="async"
-                                    loading="lazy"></iframe>
+                                    loading="lazy"></iframe> --}}
                         </div>
                        
                         <div class="standard-blog-content">
@@ -137,7 +137,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="cast" role="tabpanel" aria-labelledby="cast-tab">
                                 <div class="season-overflow scroll">
-                                    <div class="row">
+                                    <div class="row g-2">
                                         @forelse($cast as $actor)
                                             <div class="col-sm-4">
                                                 <div class="cast">

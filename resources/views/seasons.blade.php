@@ -171,7 +171,7 @@
                             </div>
                             <div class="tab-pane fade" id="cast" role="tabpanel" aria-labelledby="cast-tab">
                                 <div class="season-overflow scroll">
-                                    <div class="row">
+                                    <div class="row g-3">
                                         @include('partials.cast-tv')
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row gy-3">
                     @foreach($popularShows as $show)
                         <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                             <a href="{{ route('tv.show', $show->id) }}">
