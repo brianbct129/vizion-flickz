@@ -4496,7 +4496,8 @@ label {
     border-radius: 4px;
 }
 
-#searchLoading {
+#searchLoading,
+#footerSearchLoading {
     border-radius: 4px;
     top: 100%;
     left: 0;

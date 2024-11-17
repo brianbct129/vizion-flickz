@@ -48,12 +48,26 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="footer-widget">
-                        <h4 class="fw-title">Subscribe Us</h4>
-                        <form action="#" class="newsletter-form">
-                            <input type="email" placeholder="info@youmail.com">
-                            <button type="submit"><i class="flaticon-small-rocket-ship-silhouette"></i></button>
+                    <div class="footer-widget position-relative">
+                        <h4 class="fw-title">Search</h4>
+                        <form id="footerSearchForm" action="{{ route('search') }}" method="GET" class="newsletter-form">
+                            <input type="text" 
+                                   name="q" 
+                                   id="footerSearchInput"
+                                   placeholder="Search..."
+                                   autocomplete="off"
+                                   required>
+                            <button type="submit" disabled><i class="flaticon-search"></i></button>
                         </form>
+                        <div id="footerSearchResults" class="search-results position-absolute w-100 rounded mt-1" style="max-height: 300px; overflow-y: auto; display: none;">
+                            <div id="footerSearchLoading" class="text-center py-4" style="display: none;">
+                                <div class="spinner-border text-light" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <div id="footerSearchResultsContent">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -392,11 +392,6 @@ function wowAnimation() {
 })(jQuery);
 
 $(document).ready(function() {
-    let currentRequest = null;
-    let currentPage = 1;
-    let isLoading = false;
-    let lastQuery = '';
-
     // Fungsi untuk menormalisasi string
     function normalizeString(str) {
         // Extract year if present
@@ -422,151 +417,172 @@ $(document).ready(function() {
         };
     }
 
-    $('#searchInput').on('input', function() {
-        let query = $(this).val().trim();
-        
-        // Reset pencarian jika query berbeda
-        if (query !== lastQuery) {
-            currentPage = 1;
-            $('#searchResultsContent').empty();
-        }
+    function initializeSearch(inputSelector, formSelector, resultsSelector, resultsContentSelector, loadingSelector) {
+        let currentRequest = null;
+        let currentPage = 1;
+        let isLoading = false;
+        let lastQuery = '';
 
-        lastQuery = query;
-
-        if (query === '') {
-            $('#searchResults').hide();
-            return;
-        }
-
-        // Minimal 2 karakter untuk memulai pencarian
-        if (query.length > 1) {
-            if (currentRequest != null) {
-                currentRequest.abort();
+        $(inputSelector).on('input', function() {
+            let query = $(this).val().trim();
+            
+            if (query !== lastQuery) {
+                currentPage = 1;
+                $(resultsContentSelector).empty();
             }
 
-            $('#searchResults').show();
-            $('#searchLoading').show();
+            lastQuery = query;
 
-            currentRequest = $.ajax({
-                url: searchRoute,
-                type: 'GET',
-                data: { 
-                    q: query,
-                    page: currentPage
-                },
-                success: function(data) {
-                    $('#searchLoading').hide();
-                    
-                    if (data.trim() === '') {
-                        if (currentPage === 1) {
-                            $('#searchResultsContent').html('<div class="search-item p-2 text-center text-light">No results found.</div>');
-                            $('#searchResults').show();
-                        }
-                    } else {
-                        if (currentPage === 1) {
-                            $('#searchResultsContent').html(data);
-                        } else {
-                            $('#searchResultsContent').append(data);
-                        }
-                        $('#searchResultsContent').show();
-                        
-                        // Periksa hasil yang relevan dengan normalisasi
-                        let results = $('#searchResultsContent .search-item');
-                        let hasRelevantResults = false;
-                        let normalized = normalizeString(query);
-                        
-                        results.each(function() {
-                            let titleWithYear = $(this).find('h6').text();
-                            let itemNormalized = normalizeString(titleWithYear);
-                            
-                            if (normalized.year) {
-                                // Jika ada tahun, cocokkan keduanya
-                                if (itemNormalized.text.includes(normalized.text) && 
-                                    itemNormalized.year === normalized.year) {
-                                    hasRelevantResults = true;
-                                    return false; // break the loop
-                                }
-                            } else {
-                                // Jika tidak ada tahun, cukup cocokkan judul
-                                if (itemNormalized.text.includes(normalized.text)) {
-                                    hasRelevantResults = true;
-                                    return false; // break the loop
-                                }
-                            }
-                        });
+            if (query === '') {
+                $(resultsSelector).hide();
+                return;
+            }
 
-                        if (hasRelevantResults) {
-                            currentPage++;
-                            checkForMoreData(query);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    if (status !== 'abort') {
-                        $('#searchResults').hide();
-                        $('#searchLoading').hide();
-                    }
+            if (query.length > 1) {
+                if (currentRequest != null) {
+                    currentRequest.abort();
                 }
-            });
-        } else {
-            $('#searchResults').hide();
-        }
-    });
 
-    function checkForMoreData(query) {
-        if (!isLoading) {
-            isLoading = true;
-            let normalizedQuery = normalizeString(query);
-            
-            $.ajax({
-                url: searchRoute,
-                type: 'GET',
-                data: { 
-                    q: query,
-                    page: currentPage
-                },
-                success: function(data) {
-                    if (data.trim() !== '') {
-                        let tempDiv = $('<div>').html(data);
-                        let relevantResults = tempDiv.find('.search-item').filter(function() {
-                            let title = normalizeString($(this).find('h6').text());
-                            return title.includes(normalizedQuery);
-                        });
+                $(resultsSelector).show();
+                $(loadingSelector).show();
 
-                        if (relevantResults.length > 0) {
-                            $('#searchResultsContent').append(relevantResults);
-                            currentPage++;
-                            isLoading = false;
-                            checkForMoreData(query);
+                currentRequest = $.ajax({
+                    url: searchRoute,
+                    type: 'GET',
+                    data: { 
+                        q: query,
+                        page: currentPage
+                    },
+                    success: function(data) {
+                        $(loadingSelector).hide();
+                        
+                        if (data.trim() === '') {
+                            if (currentPage === 1) {
+                                $(resultsContentSelector).html('<div class="search-item p-2 text-center text-light">No results found.</div>');
+                                $(resultsSelector).show();
+                            }
                         } else {
-                            $('#searchLoading').hide();
+                            if (currentPage === 1) {
+                                $(resultsContentSelector).html(data);
+                            } else {
+                                $(resultsContentSelector).append(data);
+                            }
+                            $(resultsContentSelector).show();
+                            
+                            let results = $(resultsContentSelector + ' .search-item');
+                            let hasRelevantResults = false;
+                            let normalized = normalizeString(query);
+                            
+                            results.each(function() {
+                                let titleWithYear = $(this).find('h6').text();
+                                let itemNormalized = normalizeString(titleWithYear);
+                                
+                                if (normalized.year) {
+                                    if (itemNormalized.text.includes(normalized.text) && 
+                                        itemNormalized.year === normalized.year) {
+                                        hasRelevantResults = true;
+                                        return false;
+                                    }
+                                } else {
+                                    if (itemNormalized.text.includes(normalized.text)) {
+                                        hasRelevantResults = true;
+                                        return false;
+                                    }
+                                }
+                            });
+
+                            if (hasRelevantResults) {
+                                currentPage++;
+                                checkForMoreData(query, resultsContentSelector, loadingSelector);
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (status !== 'abort') {
+                            $(resultsSelector).hide();
+                            $(loadingSelector).hide();
+                        }
+                    }
+                });
+            } else {
+                $(resultsSelector).hide();
+            }
+        });
+
+        function checkForMoreData(query, resultsContentSelector, loadingSelector) {
+            if (!isLoading) {
+                isLoading = true;
+                let normalizedQuery = normalizeString(query);
+                
+                $.ajax({
+                    url: searchRoute,
+                    type: 'GET',
+                    data: { 
+                        q: query,
+                        page: currentPage
+                    },
+                    success: function(data) {
+                        if (data.trim() !== '') {
+                            let tempDiv = $('<div>').html(data);
+                            let relevantResults = tempDiv.find('.search-item').filter(function() {
+                                let title = normalizeString($(this).find('h6').text());
+                                return title.includes(normalizedQuery);
+                            });
+
+                            if (relevantResults.length > 0) {
+                                $(resultsContentSelector).append(relevantResults);
+                                currentPage++;
+                                isLoading = false;
+                                checkForMoreData(query, resultsContentSelector, loadingSelector);
+                            } else {
+                                $(loadingSelector).hide();
+                                isLoading = false;
+                            }
+                        } else {
+                            $(loadingSelector).hide();
                             isLoading = false;
                         }
-                    } else {
-                        $('#searchLoading').hide();
+                    },
+                    error: function() {
+                        $(loadingSelector).hide();
                         isLoading = false;
                     }
-                },
-                error: function() {
-                    $('#searchLoading').hide();
-                    isLoading = false;
-                }
-            });
-        }
-    }
-
-    $('#searchInput').on('keyup', function(e) {
-        if (e.key === 'Backspace' || e.key === 'Delete') {
-            if ($(this).val().trim() === '') {
-                $('#searchResults').hide();
-                currentPage = 1;
+                });
             }
         }
-    });
 
+        $(inputSelector).on('keyup', function(e) {
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                if ($(this).val().trim() === '') {
+                    $(resultsSelector).hide();
+                    currentPage = 1;
+                }
+            }
+        });
+    }
+
+    // Inisialisasi search untuk nav
+    initializeSearch(
+        '#searchInput',
+        '#searchForm',
+        '#searchResults',
+        '#searchResultsContent',
+        '#searchLoading'
+    );
+
+    // Inisialisasi search untuk footer
+    initializeSearch(
+        '#footerSearchInput',
+        '#footerSearchForm',
+        '#footerSearchResults',
+        '#footerSearchResultsContent',
+        '#footerSearchLoading'
+    );
+
+    // Update click handler untuk menutup hasil pencarian
     $(document).on('click', function(e) {
-        if (!$(e.target).closest('#searchForm').length) {
-            $('#searchResults').hide();
+        if (!$(e.target).closest('#searchForm, #footerSearchForm').length) {
+            $('#searchResults, #footerSearchResults').hide();
         }
     });
 });
