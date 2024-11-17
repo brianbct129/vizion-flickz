@@ -60,12 +60,12 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            {{-- <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
+                            <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
                                     frameborder="0" 
                                     allowfullscreen
                                     referrerpolicy="origin"
                                     decoding="async"
-                                    loading="lazy"></iframe> --}}
+                                    loading="lazy"></iframe>
                         </div>
                        
                         <div class="standard-blog-content">
