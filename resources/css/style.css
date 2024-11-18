@@ -1096,11 +1096,15 @@ label {
 	border-radius: 10px;
 	background-image: var(--nft-gradient-color);
 }
-.sidebar-logo img,
-.footer-logo img,
+
+.footer-logo img {
+    width: 60%;
+}
+
 .nav-logo img {
     width: 30px;
 }
+
 .sidebar-icon {
     flex-grow: 1;
 }

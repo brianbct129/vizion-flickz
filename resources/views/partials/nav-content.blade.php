@@ -1,5 +1,5 @@
 <nav class="menu-nav">
-    <div class="logo"><a href="/"><img src="{{ asset('img/logo/naftmak.svg') }}" alt=""></a></div>
+    <div class="logo"><a href="/"><img src="{{ asset('img/logo/naftmak.png') }}" alt=""></a></div>
     <div class="header-form position-relative">
         <form id="searchForm" action="{{ route('search') }}" method="GET">
             <button type="submit" disabled><i class="flaticon-search"></i></button>

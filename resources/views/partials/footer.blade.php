@@ -5,14 +5,38 @@
                 <div class="col-xl-3 col-lg-4 col-md-5 col-sm-9">
                     <div class="footer-widget">
                         <div class="footer-logo mb-25">
-                            <a href="/"><img src="{{ asset('img/logo/logo.png') }}" alt=""></a>
+                            <a href="/"><img src="{{ asset('img/logo/naftmak.png') }}" alt=""></a>
                         </div>
                         <p>{{ config('app.name') }} is a free streaming platform for movies, series, anime, and Korean dramas with Indonesian subtitles. It offers high-quality streaming at no cost, making it ideal for regions without access to cinemas.</p>
                         <ul class="footer-social">
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                            <li>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode(config('app.name')) }}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://pinterest.com/pin/create/button/?url={{ urlencode(url()->current()) }}&description={{ urlencode(config('app.name')) }}" 
+                                   target="_blank" 
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-pinterest-p"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
