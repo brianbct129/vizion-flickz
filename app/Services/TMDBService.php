@@ -719,7 +719,7 @@ class TMDBService
         }
     }
 
-    public function getPopularTVShowsPagination($page = 1, $endpoint = 'tv/popular')
+    public function getPopularTVShowsPagination($page = 1, $endpoint = 'trending/tv/week')
     {
         try {
             $query = [
@@ -727,10 +727,11 @@ class TMDBService
                 'page' => $page,
                 'include_adult' => false,
                 'vote_average.gte' => 5.0,
-                'sort_by' => 'popularity.desc',
-                'with_original_language' => 'en|ko|ja', // Menambahkan filter bahasa
-                'with_status' => 'Released|Returning Series', // Hanya show yang sudah rilis
-                'with_type' => 'Scripted|Animation' // Hanya serial skrip dan animasi
+                'sort_by' => 'vote_count.desc',
+                'vote_count.gte' => 1000,
+                'with_original_language' => 'en|ko|ja',
+                'with_status' => 'Released|Returning Series',
+                'with_type' => 'Scripted|Animation'
             ];
 
             $response = $this->client->request('GET', $endpoint, ['query' => $query]);
@@ -757,18 +758,16 @@ class TMDBService
                             return false;
                         }
 
-                        // Hanya terima show yang dari US, JP, atau KR
+                        // Country validation
                         $allowedCountries = ['US', 'JP', 'KR'];
                         $originCountries = $show->origin_country;
                         
-                        // Pastikan semua negara asal ada dalam allowed countries
                         foreach ($originCountries as $country) {
                             if (!in_array($country, $allowedCountries)) {
                                 return false;
                             }
                         }
                         
-                        // Pastikan setidaknya satu dari negara yang diizinkan
                         $hasAllowedCountry = false;
                         foreach ($allowedCountries as $country) {
                             if (in_array($country, $originCountries)) {
@@ -800,7 +799,6 @@ class TMDBService
                             }
                         }
 
-                        // Rating filter
                         return $show->vote_average > 5.0;
                     })
                     ->map(function($show) {
@@ -812,11 +810,13 @@ class TMDBService
                             'media_type' => 'tv',
                             'vote_average' => $show->vote_average,
                             'popularity' => $show->popularity,
+                            'vote_count' => $show->vote_count ?? 0,
                             'genre_ids' => $show->genre_ids ?? [],
                             'origin_country' => $show->origin_country ?? [],
                             'original_language' => $show->original_language ?? null
                         ];
                     })
+                    ->sortByDesc('vote_count')
                     ->values(),
                 'total_pages' => $result->total_pages,
                 'current_page' => $result->page
@@ -964,17 +964,18 @@ class TMDBService
         }
     }
 
-    public function getPopularTVShows($endpoint = 'tv/popular')
+    public function getPopularTVShows($endpoint = 'trending/tv/week')
     {
         try {
             $query = [
                 'language' => 'en-US',
                 'include_adult' => false,
                 'vote_average.gte' => 5.0,
-                'sort_by' => 'popularity.desc',
-                'with_original_language' => 'en|ko|ja', // Menambahkan filter bahasa
-                'with_status' => 'Released|Returning Series', // Hanya show yang sudah rilis
-                'with_type' => 'Scripted|Animation' // Hanya serial skrip dan animasi
+                'sort_by' => 'vote_count.desc',
+                'vote_count.gte' => 1000,
+                'with_original_language' => 'en|ko|ja',
+                'with_status' => 'Released|Returning Series',
+                'with_type' => 'Scripted|Animation'
             ];
 
             // Get first page to know total pages
@@ -1014,18 +1015,16 @@ class TMDBService
                             return false;
                         }
 
-                        // Hanya terima show yang dari US, JP, atau KR
+                        // Country validation
                         $allowedCountries = ['US', 'JP', 'KR'];
                         $originCountries = $show->origin_country;
                         
-                        // Pastikan semua negara asal ada dalam allowed countries
                         foreach ($originCountries as $country) {
                             if (!in_array($country, $allowedCountries)) {
                                 return false;
                             }
                         }
                         
-                        // Pastikan setidaknya satu dari negara yang diizinkan
                         $hasAllowedCountry = false;
                         foreach ($allowedCountries as $country) {
                             if (in_array($country, $originCountries)) {
@@ -1057,7 +1056,11 @@ class TMDBService
                             }
                         }
 
-                        // Rating filter
+                        // Vote count filter
+                        if (!isset($show->vote_count) || $show->vote_count < 1000) {
+                            return false;
+                        }
+
                         return $show->vote_average > 5.0;
                     })
                     ->map(function($show) {
@@ -1069,11 +1072,13 @@ class TMDBService
                             'media_type' => 'tv',
                             'vote_average' => $show->vote_average,
                             'popularity' => $show->popularity,
+                            'vote_count' => $show->vote_count ?? 0,
                             'genre_ids' => $show->genre_ids ?? [],
                             'origin_country' => $show->origin_country ?? [],
                             'original_language' => $show->original_language ?? null
                         ];
                     })
+                    ->sortByDesc('vote_count')
                     ->values(),
                 'total_pages' => $totalPages,
                 'current_page' => 1
