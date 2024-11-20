@@ -240,20 +240,55 @@ class TMDBService
             $response = $this->client->request('GET', 'trending/all/week', [
                 'query' => [
                     'language' => 'en-US',
-                    'page' => 1
+                    'page' => 1,
+                    'sort_by' => 'vote_count.desc', // Sort berdasarkan jumlah vote
+                    'vote_count.gte' => 1000, // Minimal vote count
+                    'vote_average.gte' => 5.0, // Minimal rating
+                    'include_adult' => false,
+                    'with_original_language' => 'en|ko|ja'
                 ]
             ]);
 
             $data = json_decode($response->getBody());
-            $results = array_slice($data->results, 0, $limit);
             
-            // Tambahkan informasi "type" untuk membedakan
-            foreach ($results as $item) {
-                $item->type = 'popular';
-            }
+            // Filter dan sort berdasarkan vote_count
+            $filteredResults = collect($data->results)
+                ->filter(function($item) {
+                    // Basic validation
+                    if (empty($item->poster_path)) {
+                        return false;
+                    }
+
+                    // Filter untuk konten dari US, JP, atau KR saja
+                    if (isset($item->origin_country)) {
+                        $allowedCountries = ['US', 'JP', 'KR'];
+                        $hasAllowedCountry = false;
+                        foreach ($item->origin_country as $country) {
+                            if (in_array($country, $allowedCountries)) {
+                                $hasAllowedCountry = true;
+                                break;
+                            }
+                        }
+                        if (!$hasAllowedCountry) {
+                            return false;
+                        }
+                    }
+
+                    // Pastikan memiliki vote count yang cukup
+                    return isset($item->vote_count) && $item->vote_count >= 1000;
+                })
+                ->sortByDesc('vote_count')
+                ->take($limit)
+                ->map(function($item) {
+                    // Tambahkan type berdasarkan media_type
+                    $item->type = $item->media_type ?? 'movie';
+                    return $item;
+                })
+                ->values()
+                ->all();
             
             return [
-                'popular' => $results,
+                'popular' => $filteredResults,
                 'limit' => $limit
             ];
         } catch (\Exception $e) {
