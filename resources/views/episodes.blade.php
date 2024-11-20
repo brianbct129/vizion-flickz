@@ -58,12 +58,12 @@
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidsrc.xyz/embed/tv?tmdb={{ $tvShow->id }}&season={{ $season->season_number }}&episode={{ $episode->episode_number }}&ds_lang=en" 
-                                    frameborder="0" 
-                                    loading="lazy" 
-                                    decoding="async"
-                                    referrerpolicy="origin"
-                                    allowfullscreen></iframe>
+                            <iframe src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=1C1832&secondaryColor=7444EF" 
+                                frameborder="0" 
+                                loading="lazy" 
+                                decoding="async"
+                                referrerpolicy="origin"
+                                allowfullscreen></iframe>
                         </div>
                         <div class="standard-blog-content">
                             <h4 class="title">S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}</h4>

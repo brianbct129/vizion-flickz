@@ -60,12 +60,12 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidsrc.xyz/embed/movie/{{ $movie->id }}" 
+                            <iframe src="https://vidlink.pro/movie/{{ $movie->id }}?primaryColor=1C1832&secondaryColor=7444EF" 
                                     frameborder="0" 
-                                    allowfullscreen
-                                    referrerpolicy="origin"
+                                    loading="lazy" 
                                     decoding="async"
-                                    loading="lazy"></iframe>
+                                    referrerpolicy="origin"
+                                    allowfullscreen></iframe>
                         </div>
                        
                         <div class="standard-blog-content">
