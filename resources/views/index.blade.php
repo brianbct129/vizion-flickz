@@ -5,7 +5,7 @@
 @endsection
 
 @section('description')
-{{ config('app.name') }} is a free streaming platform for movies, series, anime, and Korean dramas with Indonesian subtitles. It offers high-quality streaming at no cost, making it ideal for regions without access to cinemas.
+{{ config('app.name') }} is a free streaming platform for movies, series, anime, and Korean dramas with subtitles. It offers high-quality streaming at no cost, making it ideal for regions without access to cinemas.
 @endsection
 
 @section('content')

@@ -60,7 +60,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidlink.pro/movie/{{ $movie->id }}?primaryColor=1C1832&secondaryColor=7444EF" 
+                            <iframe src="https://vidlink.pro/movie/{{ $movie->id }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"

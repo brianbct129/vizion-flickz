@@ -7,7 +7,7 @@
                         <div class="footer-logo mb-25">
                             <a href="/"><img src="{{ asset('img/logo/naftmak.png') }}" alt=""></a>
                         </div>
-                        <p>{{ config('app.name') }} is a free streaming platform for movies, series, anime, and Korean dramas with Indonesian subtitles. It offers high-quality streaming at no cost, making it ideal for regions without access to cinemas.</p>
+                        <p>{{ config('app.name') }} is a free streaming platform for movies, series, anime, and Korean dramas with subtitles. It offers high-quality streaming at no cost, making it ideal for regions without access to cinemas.</p>
                         <ul class="footer-social">
                             <li>
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 

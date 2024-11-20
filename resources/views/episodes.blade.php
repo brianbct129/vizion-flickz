@@ -58,7 +58,7 @@
                 <div class="col-12">
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=1C1832&secondaryColor=7444EF" 
+                            <iframe src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
                                 frameborder="0" 
                                 loading="lazy" 
                                 decoding="async"
