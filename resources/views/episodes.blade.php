@@ -56,9 +56,26 @@
         <div class="container">
             <div class="row mb-45">
                 <div class="col-12">
+                    <div class="activity-table-nav">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="server1-tv" data-bs-toggle="tab" data-bs-target="#server1-tv" type="button"
+                                    role="tab" aria-controls="server1" aria-selected="true">Server 1</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="server2-tv" data-bs-toggle="tab" data-bs-target="#server2-tv" type="button"
+                                    role="tab" aria-controls="server2" aria-selected="false">Server 2</button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
-                            <iframe src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
+                            <script>
+                                const tvShowId = {{ $tvShow->id }};
+                                const seasonNumber = {{ $season->season_number }};
+                                const episodeNumber = {{ $episode->episode_number }};
+                            </script>
+                            <iframe id="videoPlayer" src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
                                 frameborder="0" 
                                 loading="lazy" 
                                 decoding="async"

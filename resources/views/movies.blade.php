@@ -58,9 +58,22 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    <div class="activity-table-nav">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="server1-mov" data-bs-toggle="tab" data-bs-target="#server1-mov" type="button"
+                                    role="tab" aria-controls="server1" aria-selected="true">Server 1</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="server2-mov" data-bs-toggle="tab" data-bs-target="#server2-mov" type="button"
+                                    role="tab" aria-controls="server2" aria-selected="false">Server 2</button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="standard-blog-item blog-details-content">
+                        <script>const movieId = {{ $movie->id }};</script>
                         <div class="blog-thumb">
-                            <iframe src="https://vidlink.pro/movie/{{ $movie->id }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
+                            <iframe id="videoPlayer" src="https://vidlink.pro/movie/{{ $movie->id }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"
@@ -258,5 +271,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
             @endforeach
         ]
     }
+
+    
     </script>
 @endsection
