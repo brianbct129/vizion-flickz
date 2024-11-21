@@ -36,7 +36,7 @@
             <div class="row justify-content-center">
                 <div class="col-12">
                     <div class="market-single-breadcrumb">
-                        <div class="home-back-btn"><a href="{{ route('home') }}">go back to home</a></div>
+                        <div class="home-back-btn d-none d-lg-block"><a href="{{ route('home') }}">go back to home</a></div>
                         <nav aria-label="breadcrumb" class="d-none d-lg-block">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
