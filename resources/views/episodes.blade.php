@@ -66,10 +66,6 @@
                                 <button class="nav-link" id="server2-tv" data-bs-toggle="tab" data-bs-target="#server2-tv" type="button"
                                     role="tab" aria-controls="server2" aria-selected="false">Server 2</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="server3-tv" data-bs-toggle="tab" data-bs-target="#server3-tv" type="button"
-                                    role="tab" aria-controls="server3" aria-selected="false">Server 3</button>
-                            </li>
                         </ul>
                     </div>
                     <div class="standard-blog-item blog-details-content">
@@ -114,6 +110,12 @@
                                         $episodeNumber += $previousEpisodes;
                                     }
                                 }
+
+                                $anilistId = null;
+                                if (isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country)) {
+                                    $anilistController = new \App\Http\Controllers\AnilistController();
+                                    $anilistId = $anilistController->getAnilistId($tvShow->name);
+                                }
                             @endphp
                             <script>
                                 const tvShowId = {{ $tvShow->id }};
@@ -121,10 +123,15 @@
                                 const episodeNumber = {{ $episodeNumber }};
                                 const isAnime = {{ isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country) ? 'true' : 'false' }};
                                 const animeSlug = '{{ $animeSlug }}';
+                                const anilistId = {{ $anilistId ?? 'null' }};
                             </script>
                             <iframe id="videoPlayer" 
                                 src="@if(isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country))
-                                        https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
+                                        @if($anilistId)
+                                            https://player.smashy.stream/anime?anilist={{ $anilistId }}&e={{ $episodeNumber }}
+                                        @else
+                                            https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
+                                        @endif
                                     @else
                                         https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
                                     @endif"

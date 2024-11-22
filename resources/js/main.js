@@ -405,8 +405,8 @@ function wowAnimation() {
 =============================================*/
 
 $('#server1-tv').on('click', function() {
-	if (isAnime) {
-		$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
+	if (isAnime && anilistId) {
+		$('#videoPlayer').attr('src', `https://player.smashy.stream/anime?anilist=${anilistId}&e=${episodeNumber}`);
 	} else {
 		$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
 	}
@@ -414,23 +414,11 @@ $('#server1-tv').on('click', function() {
 
 $('#server2-tv').on('click', function() {
 	if (isAnime) {
-		$('#videoPlayer').attr('src', `https://2anime.xyz/embed/${animeSlug}-episode-${episodeNumber}`);
+		$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
 	} else {
 		$('#videoPlayer').attr('src', `https://vidsrc.me/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
 	}
 });
-
-$('#server3-tv').on('click', function() {
-	if (isAnime) {
-		$('#videoPlayer').attr('src', `https://vidsrc.me/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
-	} else {
-		$('#videoPlayer').attr('src', `https://embed.su/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
-	}
-});
-
-   
-
-
 })(jQuery);
 
 $(document).ready(function() {
