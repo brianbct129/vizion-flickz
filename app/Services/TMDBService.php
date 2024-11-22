@@ -75,14 +75,16 @@ class TMDBService
             ]);
 
             $result = json_decode($response->getBody());
+            $currentDate = now()->format('Y-m-d'); // Mendapatkan tanggal hari ini
             
             return [
                 'results' => collect($result->results)
-                    ->filter(function($movie) {
+                    ->filter(function($movie) use ($currentDate) {
                         return !empty($movie->poster_path) && 
                                !empty($movie->release_date) &&
                                $movie->original_language === 'en' &&
-                               (!isset($movie->genre_ids) || !in_array(99, $movie->genre_ids));
+                               (!isset($movie->genre_ids) || !in_array(99, $movie->genre_ids)) &&
+                               $movie->release_date <= $currentDate; // Filter film yang sudah rilis
                     })
                     ->map(function($movie) {
                         return (object)[
