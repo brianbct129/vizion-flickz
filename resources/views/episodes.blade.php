@@ -66,21 +66,74 @@
                                 <button class="nav-link" id="server2-tv" data-bs-toggle="tab" data-bs-target="#server2-tv" type="button"
                                     role="tab" aria-controls="server2" aria-selected="false">Server 2</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="server3-tv" data-bs-toggle="tab" data-bs-target="#server3-tv" type="button"
+                                    role="tab" aria-controls="server3" aria-selected="false">Server 3</button>
+                            </li>
                         </ul>
                     </div>
                     <div class="standard-blog-item blog-details-content">
                         <div class="blog-thumb">
+                            @php
+                                // Fungsi untuk mendeteksi apakah season menggunakan continuous episode
+                                function isSeasonContinuous($seasons, $currentSeasonNumber) {
+                                    // Filter season yang valid (bukan season 0)
+                                    $validSeasons = collect($seasons)->filter(fn($s) => $s->season_number > 0);
+                                    
+                                    // Ambil season saat ini dan season sebelumnya
+                                    $currentSeason = $validSeasons->firstWhere('season_number', $currentSeasonNumber);
+                                    $previousSeason = $validSeasons->firstWhere('season_number', $currentSeasonNumber - 1);
+                                    
+                                    // Jika ini season 1 atau tidak ada season sebelumnya
+                                    if ($currentSeasonNumber <= 1 || !$previousSeason) return false;
+                                    
+                                    // Ambil detail episode dari season ini
+                                    $seasonEpisodes = isset($currentSeason->episodes) ? collect($currentSeason->episodes) : collect();
+                                    $firstEpisodeOfSeason = $seasonEpisodes->first();
+                                    
+                                    // Jika episode pertama lebih besar dari 1, kemungkinan continuous
+                                    return $firstEpisodeOfSeason && $firstEpisodeOfSeason->episode_number > 1;
+                                }
+
+                                // Hitung episode number
+                                $episodeNumber = $episode->episode_number;
+                                $animeSlug = Str::slug($tvShow->name);
+                                
+                                if(isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country)) {
+                                    // Cek apakah ini continuous episode
+                                    $isContinuous = isSeasonContinuous($tvShow->seasons, $season->season_number - 1);
+                                    
+                                    // Jika bukan continuous dan bukan season 1, hitung ulang episode
+                                    if (!$isContinuous && $season->season_number > 1) {
+                                        $previousEpisodes = 0;
+                                        foreach($tvShow->seasons as $prevSeason) {
+                                            if($prevSeason->season_number < $season->season_number && $prevSeason->season_number != 0) {
+                                                $previousEpisodes += $prevSeason->episode_count;
+                                            }
+                                        }
+                                        $episodeNumber += $previousEpisodes;
+                                    }
+                                }
+                            @endphp
                             <script>
                                 const tvShowId = {{ $tvShow->id }};
                                 const seasonNumber = {{ $season->season_number }};
-                                const episodeNumber = {{ $episode->episode_number }};
+                                const episodeNumber = {{ $episodeNumber }};
+                                const isAnime = {{ isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country) ? 'true' : 'false' }};
+                                const animeSlug = '{{ $animeSlug }}';
                             </script>
-                            <iframe id="videoPlayer" src="https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default" 
-                                frameborder="0" 
-                                loading="lazy" 
-                                decoding="async"
-                                referrerpolicy="origin"
-                                allowfullscreen></iframe>
+                            <iframe id="videoPlayer" 
+                                src="@if(isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country))
+                                        https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
+                                    @else
+                                        https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
+                                    @endif"
+                                    frameborder="0" 
+                                    loading="lazy" 
+                                    decoding="async"
+                                    referrerpolicy="origin" 
+                                    scrolling="no"
+                                    allowfullscreen></iframe>
                         </div>
                         <div class="standard-blog-content">
                             <h4 class="title">S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}</h4>
