@@ -1,5 +1,8 @@
 {
     "version": 2,
+    "buildCommand": false,
+    "devCommand": false,
+    "installCommand": false,
     "functions": {
         "api/*.php": {
             "runtime": "vercel-php@0.6.0"
@@ -20,7 +23,6 @@
             "NOW_PHP_DEBUG": "1"
         }
     },
-    "ignoreCommand": "true",
     "env": {
         "APP_NAME": "VizionFlickz",
         "APP_ENV": "production",
