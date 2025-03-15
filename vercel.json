@@ -1,17 +1,14 @@
 {
     "version": 2,
-    "buildCommand": "echo 'Skipping build step'",
-    "outputDirectory": "public",
+    "buildCommand": null,
+    "devCommand": null,
+    "installCommand": null,
     "functions": {
         "api/*.php": {
             "runtime": "vercel-php@0.6.0"
         }
     },
     "routes": [
-        {
-            "src": "/build/(.*)",
-            "dest": "/public/build/$1"
-        },
         {
             "src": "/(css|js|images|fonts|favicon.ico|robots.txt)",
             "dest": "/public/$1"
@@ -21,6 +18,11 @@
             "dest": "/api/index.php"
         }
     ],
+    "build": {
+        "env": {
+            "NOW_PHP_DEBUG": "1"
+        }
+    },
     "env": {
         "APP_NAME": "VizionFlickz",
         "APP_ENV": "production",
@@ -33,7 +35,6 @@
         "VIEW_COMPILED_PATH": "/tmp",
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
-        "SESSION_DRIVER": "cookie",
-        "PHP_VERSION": "8.2"
+        "SESSION_DRIVER": "cookie"
     }
 } 
