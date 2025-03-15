@@ -1,8 +1,8 @@
 {
     "version": 2,
-    "buildCommand": false,
-    "devCommand": false,
-    "installCommand": false,
+    "buildCommand": null,
+    "devCommand": null,
+    "installCommand": null,
     "functions": {
         "api/*.php": {
             "runtime": "vercel-php@0.6.0"
