@@ -1,10 +1,13 @@
-/vendor
-/node_modules
 .env
 .env.*
-*.log
 .git
 .gitignore
 .gitattributes
+/node_modules
+/storage/*.key
+/vendor
+*.log
+.editorconfig
 README.md
-/storage/*.key 
+composer.lock
+package-lock.json 
