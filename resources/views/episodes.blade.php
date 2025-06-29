@@ -125,7 +125,7 @@
                                 const animeSlug = '{{ $animeSlug }}';
                                 const anilistId = {{ $anilistId ?? 'null' }};
                             </script>
-                            <iframe id="videoPlayer" 
+                            <!-- <iframe id="videoPlayer" 
                                 src="@if(isset($tvShow->origin_country) && in_array('JP', $tvShow->origin_country))
                                         @if($anilistId)
                                             https://player.smashy.stream/anime?anilist={{ $anilistId }}&e={{ $episodeNumber }}
@@ -135,6 +135,14 @@
                                     @else
                                         https://vidlink.pro/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default
                                     @endif"
+                                    frameborder="0" 
+                                    loading="lazy" 
+                                    decoding="async"
+                                    referrerpolicy="origin" 
+                                    scrolling="no"
+                                    allowfullscreen></iframe> -->
+                                    <iframe id="videoPlayer" 
+                                src="https://vidsrc.me/embed/tv/{{ $tvShow->id }}/{{ $season->season_number }}/{{ $episode->episode_number }}"
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"
