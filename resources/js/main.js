@@ -481,6 +481,9 @@ $(document).ready(function() {
                 currentRequest = $.ajax({
                     url: searchRoute,
                     type: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
                     data: { 
                         q: query,
                         page: currentPage
@@ -549,6 +552,9 @@ $(document).ready(function() {
                 $.ajax({
                     url: searchRoute,
                     type: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
                     data: { 
                         q: query,
                         page: currentPage

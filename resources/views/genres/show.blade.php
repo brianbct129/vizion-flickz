@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Helpers\HashidHelper;
+@endphp
+
 @section('title')
 {{ $currentGenre ? $currentGenre->name . ' Movies & TV Shows' : 'Genre Not Found' }}
 @endsection
@@ -75,7 +79,7 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
                     <ul class="category-list">
                         @foreach(collect($genres)->take(8) as $genre)
                             <li class="{{ request('genre') == $genre->id ? 'active' : '' }}">
-                                <a href="{{ route('genres.show', ['id' => $genre->id, 'name' => strtolower($genre->name)]) }}">
+                                <a href="{{ route('genres.show', ['hash' => HashidHelper::encode($genre->id), 'name' => strtolower($genre->name)]) }}">
                                     <i class="fas {{ $genreIcons[$genre->name] ?? 'fa-film' }} me-2"></i>
                                     {{ $genre->name }}
                                 </a>
@@ -95,7 +99,7 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
                 @foreach($content as $item)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                         <div class="movie-item">
-                            <a href="{{ isset($item->title) ? route('movies.show', $item->id) : route('tv.show', $item->id) }}">
+                            <a href="{{ isset($item->title) ? route('movies.show', HashidHelper::encode($item->id)) : route('tv.show', HashidHelper::encode($item->id)) }}">
                                 <div class="movie-card general-card">
                                     <div class="content-card">
                                         <img src="{{ 'https://image.tmdb.org/t/p/w500' . $item->poster_path }}"
@@ -125,7 +129,7 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
                             <ul class="pagination">
                                 @if($currentPage > 1)
                                     <li class="page-item">
-                                        <a href="{{ route('genres.show', ['id' => $genreId, 'name' => $genreName, 'page' => $currentPage - 1]) }}" 
+                                        <a href="{{ route('genres.show', ['hash' => HashidHelper::encode($currentGenre->id), 'name' => $genreName, 'page' => $currentPage - 1]) }}" 
                                            class="page-link" aria-label="Previous">
                                            <i class="fas fa-chevron-left"></i>
                                         </a>
@@ -134,14 +138,14 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
 
                                 @for($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++)
                                     <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                                        <a href="{{ route('genres.show', ['id' => $genreId, 'name' => $genreName, 'page' => $i]) }}" 
+                                        <a href="{{ route('genres.show', ['hash' => HashidHelper::encode($currentGenre->id), 'name' => $genreName, 'page' => $i]) }}" 
                                            class="page-link">{{ $i }}</a>
                                     </li>
                                 @endfor
 
                                 @if($currentPage < $totalPages)
                                     <li class="page-item">
-                                        <a href="{{ route('genres.show', ['id' => $genreId, 'name' => $genreName, 'page' => $currentPage + 1]) }}" 
+                                        <a href="{{ route('genres.show', ['hash' => HashidHelper::encode($currentGenre->id), 'name' => $genreName, 'page' => $currentPage + 1]) }}" 
                                            class="page-link" aria-label="Next">
                                            <i class="fas fa-chevron-right"></i>
                                         </a>
@@ -161,4 +165,4 @@ Watch {{ $currentGenre ? $currentGenre->name : '' }} movies and TV shows online 
         </div>
     </div>
 @endif
-@endsection 
+@endsection

@@ -71,7 +71,7 @@
                 <ul class="submenu">
                     @foreach($genres as $genre)
                         <li class="{{ request()->is('genre/' . $genre->id . '/' . strtolower($genre->name)) ? 'active' : '' }}">
-                            <a href="{{ route('genres.show', ['id' => $genre->id, 'name' => strtolower($genre->name)]) }}">
+                            <a href="{{ route('genres.show', ['hash' => \App\Helpers\HashidHelper::encode($genre->id), 'name' => strtolower($genre->name)]) }}">
                                 {{ $genre->name }}
                             </a>
                         </li>

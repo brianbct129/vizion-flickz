@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Helpers\HashidHelper;
+@endphp
+
 @section('title')
 {{ config('app.name') }} - Watch Movies, Series, Korean Dramas, Anime with Subtitles Best Quality
 @endsection
@@ -23,8 +27,8 @@
                                     <div class="banner-content text-center text-lg-center text-xl-start">
                                         <h2 class="title">{{ $movie->title }}</h2>
                                         <p>{{ $movie->overview }}</p>
-                                        <a href="{{ route('movies.show', $movie->id) }}" 
-                                           class="banner-btn mx-auto mx-lg-0 d-inline-block">
+                                        <a href="{{ route('movies.show', HashidHelper::encode($movie->id)) }}" 
+                           class="banner-btn mx-auto mx-lg-0 d-inline-block">
                                             Watch Now <i class="fi-sr-arrow-right"></i>
                                         </a>
                                     </div>
@@ -68,7 +72,7 @@
         <div class="row top-collection-active">
             @foreach($featured as $movie)
             <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
-                <a href="{{ route('movies.show', $movie->id) }}">
+                <a href="{{ route('movies.show', HashidHelper::encode($movie->id)) }}">
                     <div class="movie-card featured-card">
                         <div class="content-card">
                             <img src="{{ 'https://image.tmdb.org/t/p/w500' . $movie->poster_path }}">
@@ -153,7 +157,7 @@
         <div class="row gy-3">
             @foreach($popular as $item)
             <div class="col-lg-3 col-sm-3 col-6">
-                <a href="{{ $item->media_type === 'movie' ? route('movies.show', $item->id) : route('tv.show', $item->id) }}">
+                <a href="{{ $item->media_type === 'movie' ? route('movies.show', HashidHelper::encode($item->id)) : route('tv.show', HashidHelper::encode($item->id)) }}">
                     <div class="movie-card popular-card">
                         <div class="content-card">
                             <img src="{{ 'https://image.tmdb.org/t/p/w500' . $item->poster_path }}">
@@ -196,7 +200,7 @@
         <div class="row gy-3 justify-content-center">
             @foreach($animeList as $anime)
             <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
-                <a href="{{ $anime->media_type === 'movie' ? route('movies.show', $anime->id) : route('tv.show', $anime->id) }}">
+                <a href="{{ $anime->media_type === 'movie' ? route('movies.show', HashidHelper::encode($anime->id)) : route('tv.show', HashidHelper::encode($anime->id)) }}">
                     <div class="movie-card general-card">
                         <div class="content-card">
                             <img src="{{ 'https://image.tmdb.org/t/p/w500' . $anime->poster_path }}">

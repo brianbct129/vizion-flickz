@@ -1,8 +1,12 @@
 
-@extends('layouts.app')
+@extends('layouts.app2')
+
+@php
+    use App\Helpers\HashidHelper;
+@endphp
 
 @section('title')
-{{ config('app.name') }} - {{ $studioName }}
+    DC Movies & TV Shows - Watch DC Universe Online
 @endsection
 
 @section('description')
@@ -43,7 +47,7 @@ Complete list of {{ $studioName }} Movies and TV Shows
             @foreach($content as $item)
                 <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
                     <div class="movie-item">
-                        <a href="{{ $item->media_type === 'movie' ? route('movies.show', $item->id) : route('tv.show', $item->id) }}">
+                        <a href="{{ $item->media_type === 'movie' ? route('movies.show', HashidHelper::encode($item->id)) : route('tv.show', HashidHelper::encode($item->id)) }}">
                             <div class="movie-card general-card">
                                 <div class="content-card">
                                     <img src="{{ 'https://image.tmdb.org/t/p/w500' . $item->poster_path }}"
@@ -102,4 +106,4 @@ Complete list of {{ $studioName }} Movies and TV Shows
         @endif
     </div>
 </section>
-@endsection 
+@endsection

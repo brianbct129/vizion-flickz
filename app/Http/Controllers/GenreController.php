@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TMDBService;
+use App\Helpers\HashidHelper;
 
 class GenreController extends Controller
 {
@@ -13,9 +14,15 @@ class GenreController extends Controller
         $this->tmdb = $tmdb;
     }
 
-    public function show($id, $name)
+    public function show($hash, $name)
     {
         try {
+            // Decode hash to get real ID
+            $id = HashidHelper::decode($hash);
+            if (!$id) {
+                abort(404);
+            }
+            
             $page = request('page', 1);
             
             // Get both movie and TV genres
@@ -88,4 +95,4 @@ class GenreController extends Controller
             abort(404);
         }
     }
-} 
+}

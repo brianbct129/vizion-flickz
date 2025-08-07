@@ -46,7 +46,7 @@
                         <ul class="fw-links">
                             @forelse($footerGenres as $genre)
                                 <li>
-                                    <a href="{{ route('genres.show', ['id' => $genre->id, 'name' => \Str::slug($genre->name)]) }}">
+                                    <a href="{{ route('genres.show', ['hash' => \App\Helpers\HashidHelper::encode($genre->id), 'name' => \Str::slug($genre->name)]) }}">
                                         {{ $genre->name }}
                                     </a>
                                 </li>

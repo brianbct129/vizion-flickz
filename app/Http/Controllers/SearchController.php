@@ -39,17 +39,18 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('q');
-        $page = $request->input('page', 1);
-        $results = [];
+        try {
+            $query = $request->input('q');
+            $page = $request->input('page', 1);
+            $results = [];
 
-        if ($query) {
-            $results = $this->tmdb->multiSearch($query, $page);
-            
-            // Normalisasi query dan ekstrak tahun
-            $normalized = $this->normalizeString($query);
-            $normalizedQuery = $normalized['text'];
-            $searchYear = $normalized['year'];
+            if ($query) {
+                $results = $this->tmdb->multiSearch($query, $page);
+                
+                // Normalisasi query dan ekstrak tahun
+                $normalized = $this->normalizeString($query);
+                $normalizedQuery = $normalized['text'];
+                $searchYear = $normalized['year'];
             
             $results = array_filter($results, function($item) use ($normalizedQuery, $searchYear) {
                 // Cek konten dewasa
@@ -58,16 +59,22 @@ class SearchController extends Controller
                 }
                 
                 // Normalisasi judul film/TV untuk perbandingan
+                $title = $item->title ?? '';
                 $normalizedTitle = strtolower(
                     preg_replace(
                         ['/[&]/', '/[-\'\s:]+/'],
                         ['and', ''],
-                        trim($item->title)
+                        trim($title)
                     )
                 );
                 
                 // Get release year
-                $releaseYear = date('Y', strtotime($item->release_date));
+                $releaseDate = $item->release_date ?? null;
+                if (!$releaseDate) {
+                    return str_contains($normalizedTitle, $normalizedQuery);
+                }
+                
+                $releaseYear = date('Y', strtotime($releaseDate));
                 
                 // Jika tahun dicari, cocokkan keduanya
                 if ($searchYear) {
@@ -77,12 +84,21 @@ class SearchController extends Controller
                 // Jika tidak ada tahun, cukup cocokkan judul
                 return str_contains($normalizedTitle, $normalizedQuery);
             });
-        }
+            }
 
-        if ($request->ajax()) {
-            return view('partials.search-results', compact('results'));
-        }
+            if ($request->ajax()) {
+                return view('partials.search-results', compact('results'));
+            }
 
-        return view('search', compact('results'));
+            return view('search', compact('results'));
+        } catch (\Exception $e) {
+            \Log::error('Search Error: ' . $e->getMessage());
+            
+            if ($request->ajax()) {
+                return response('<div class="search-item p-2 text-center text-light">Search temporarily unavailable.</div>', 200);
+            }
+            
+            return view('search', ['results' => []]);
+        }
     }
 }

@@ -1,5 +1,9 @@
 @extends('layouts.app2')
 
+@php
+    use App\Helpers\HashidHelper;
+@endphp
+
 @section('title')
     {{ $tvShow->name }} ({{ \Carbon\Carbon::parse($tvShow->first_air_date)->format('Y') }}) - Watch TV Shows Online
 @endsection
@@ -151,7 +155,7 @@
                                                                         </div>
                                                                         <div class="content">
                                                                             <h5 class="title">
-                                                                                <a href="{{ route('tv.episode', ['id' => $tvShow->id, 'season' => $season->season_number, 'episode' => $episode->episode_number]) }}">
+                                                                                <a href="{{ route('tv.episode', ['hash' => HashidHelper::encode($tvShow->id), 'season' => $season->season_number, 'episode' => $episode->episode_number]) }}">
                                                                                     {{ $episode->name }}
                                                                                 </a>
                                                                             </h5>
@@ -198,7 +202,7 @@
                 <div class="row gy-3">
                     @foreach($popularShows as $show)
                         <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
-                            <a href="{{ route('tv.show', $show->id) }}">
+                            <a href="{{ route('tv.show', HashidHelper::encode($show->id)) }}">
                             <div class="movie-card general-card">
                                 <div class="content-card">
                                     <img src="{{ 'https://image.tmdb.org/t/p/w500' . $show->poster_path }}" 

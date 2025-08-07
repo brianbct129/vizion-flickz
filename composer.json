@@ -8,6 +8,7 @@
         "php": "^8.2",
         "dipeshsukhia/laravel-html-minify": "^3.3",
         "guzzlehttp/guzzle": "^7.9",
+        "hashids/hashids": "^5.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9"
     },

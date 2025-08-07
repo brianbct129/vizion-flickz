@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TMDBService;
+use App\Helpers\HashidHelper;
 use Illuminate\Support\Facades\Cache;
 
 class TvShowController extends Controller
@@ -20,9 +21,15 @@ class TvShowController extends Controller
        
     }
 
-    public function show($id)
+    public function show($hash)
     {
         try {
+            // Decode hash to get real ID
+            $id = HashidHelper::decode($hash);
+            if (!$id) {
+                abort(404);
+            }
+            
             // Cache TV show details
             $tvShowCacheKey = "tv_show_{$id}_details";
             $tvShow = Cache::remember($tvShowCacheKey, $this->cache_ttl, function() use ($id) {
@@ -93,35 +100,52 @@ class TvShowController extends Controller
         }
     }
 
-    public function season($id, $season_number)
-    {
-        // Cache season and show details
-        $seasonCacheKey = "tv_show_{$id}_season_{$season_number}_full";
-        $data = Cache::remember($seasonCacheKey, $this->cache_ttl, function() use ($id, $season_number) {
-            $season = $this->tmdb->getTvShowSeasons($id, $season_number);
-            $tvShow = $this->tmdb->getTvShowDetails($id);
-            
-            if (!$season || !$tvShow) {
-                return null;
-            }
-
-            return [
-                'tvShow' => $tvShow,
-                'season' => $season,
-                'episodes' => $season->episodes
-            ];
-        });
-
-        if (!$data) {
-            abort(404);
-        }
-
-        return view('episodes', $data);
-    }
-
-    public function episode($id, $season_number, $episode_number)
+    public function season($hash, $season_number)
     {
         try {
+            // Decode hash to get real ID
+            $id = HashidHelper::decode($hash);
+            if (!$id) {
+                abort(404);
+            }
+            
+            // Cache season and show details
+            $seasonCacheKey = "tv_show_{$id}_season_{$season_number}_full";
+            $data = Cache::remember($seasonCacheKey, $this->cache_ttl, function() use ($id, $season_number) {
+                $season = $this->tmdb->getTvShowSeasons($id, $season_number);
+                $tvShow = $this->tmdb->getTvShowDetails($id);
+                
+                if (!$season || !$tvShow) {
+                    return null;
+                }
+
+                return [
+                    'tvShow' => $tvShow,
+                    'season' => $season,
+                    'episodes' => $season->episodes
+                ];
+            });
+
+            if (!$data) {
+                abort(404);
+            }
+
+            return view('episodes', $data);
+        } catch (\Exception $e) {
+            \Log::error('Error loading season: ' . $e->getMessage());
+            abort(404);
+        }
+    }
+
+    public function episode($hash, $season_number, $episode_number)
+    {
+        try {
+            // Decode hash to get real ID
+            $id = HashidHelper::decode($hash);
+            if (!$id) {
+                abort(404);
+            }
+            
             // Get TV Show details with append_to_response
             $tvShow = $this->tmdb->getTvShowDetails($id, [
                 'append_to_response' => 'credits,similar,videos'

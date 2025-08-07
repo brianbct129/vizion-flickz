@@ -1,5 +1,9 @@
 @extends('layouts.app2')
 
+@php
+    use App\Helpers\HashidHelper;
+@endphp
+
 @section('title')
 Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->format('Y') }})
 @endsection
@@ -103,7 +107,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                                         <li class="title">Genres :</li>
                                         @foreach($movie->genres as $genre)
                                         <li>
-                                            <a href="{{ route('genres.show', ['id' => $genre->id, 'name' => Str::slug($genre->name)]) }}">
+                                            <a href="{{ route('genres.show', ['hash' => HashidHelper::encode($genre->id), 'name' => Str::slug($genre->name)]) }}">
                                                 {{ $genre->name }}{{ !$loop->last ? ',' : '' }}
                                             </a>
                                         </li>
@@ -219,7 +223,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
             <div class="row gy-3">
                 @foreach($popularMovies as $popular)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('movies.show', $popular->id) }}">
+                        <a href="{{ route('movies.show', HashidHelper::encode($popular->id)) }}">
                             <div class="movie-card general-card">
                                 <div class="content-card">
                                     <img src="{{ 'https://image.tmdb.org/t/p/w500' . $popular->poster_path }}"

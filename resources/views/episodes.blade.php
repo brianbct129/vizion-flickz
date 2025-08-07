@@ -1,5 +1,9 @@
 @extends('layouts.app2')
 
+@php
+    use App\Helpers\HashidHelper;
+@endphp
+
 @section('title')
     {{ $tvShow->name }} Season {{ $season->season_number }} Episode {{ $episode->episode_number }}: {{ $episode->name }}
 @endsection
@@ -40,7 +44,7 @@
                         <nav aria-label="breadcrumb" class="d-none d-lg-block">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('tv.show', $tvShow->id) }}">{{ $tvShow->name }}</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('tv.show', HashidHelper::encode($tvShow->id)) }}">{{ $tvShow->name }}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}</li>
                             </ol>
                         </nav>
@@ -203,7 +207,7 @@
                             <li class="blog-prev">
                                 @if($prevEpisode)
                                     <a href="{{ route('tv.episode', [
-                                        'id' => $tvShow->id, 
+                                        'hash' => HashidHelper::encode($tvShow->id), 
                                         'season' => $prevEpisode->season_number ?? $season->season_number,
                                         'episode' => $prevEpisode->episode_number
                                     ]) }}">
@@ -215,7 +219,7 @@
                             <li class="blog-next">
                                 @if($nextEpisode)
                                     <a href="{{ route('tv.episode', [
-                                        'id' => $tvShow->id, 
+                                        'hash' => HashidHelper::encode($tvShow->id), 
                                         'season' => $nextEpisode->season_number ?? $season->season_number,
                                         'episode' => $nextEpisode->episode_number
                                     ]) }}">
@@ -285,7 +289,7 @@
                                                                         </div>
                                                                         <div class="content">
                                                                             <h5 class="title">
-                                                                                <a href="{{ route('tv.episode', ['id' => $tvShow->id, 'season' => $seasonItem->season_number, 'episode' => $ep->episode_number]) }}">
+                                                                                <a href="{{ route('tv.episode', ['hash' => HashidHelper::encode($tvShow->id), 'season' => $seasonItem->season_number, 'episode' => $ep->episode_number]) }}">
                                                                                     {{ $ep->name }}
                                                                                 </a>
                                                                             </h5>
@@ -331,7 +335,7 @@
             <div class="row gy-3">
                 @foreach($popularTVShowsEpisodesPage as $show)
                     <div class="px-2 col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('tv.show', $show->id) }}">
+                        <a href="{{ route('tv.show', HashidHelper::encode($show->id)) }}">
                             <div class="movie-card general-card">
                                 <div class="content-card">
                                     <img src="{{ 'https://image.tmdb.org/t/p/w500' . $show->poster_path }}" 
@@ -374,12 +378,12 @@
             "@type": "ListItem",
             "position": 2,
             "name": "{{ $tvShow->name }}",
-            "item": "{{ route('tv.show', $tvShow->id) }}"
+            "item": "{{ route('tv.show', HashidHelper::encode($tvShow->id)) }}"
         },{
             "@type": "ListItem",
             "position": 3,
             "name": "S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}E{{ str_pad($episode->episode_number, 2, '0', STR_PAD_LEFT) }}: {{ $episode->name }}",
-            "item": "{{ route('tv.episode', ['id' => $tvShow->id, 'season' => $season->season_number, 'episode' => $episode->episode_number]) }}"
+            "item": "{{ route('tv.episode', ['hash' => HashidHelper::encode($tvShow->id), 'season' => $season->season_number, 'episode' => $episode->episode_number]) }}"
         }]
     }
     </script>

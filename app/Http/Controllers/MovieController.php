@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TMDBService;
+use App\Helpers\HashidHelper;
 use Illuminate\Support\Facades\Cache;
 
 class MovieController extends Controller
@@ -33,9 +34,15 @@ class MovieController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($hash)
     {
         try {
+            // Decode hash to get real ID
+            $id = HashidHelper::decode($hash);
+            if (!$id) {
+                abort(404);
+            }
+            
             // Get movie details with credits and similar movies
             $movie = $this->tmdb->getMovieDetails($id, [
                 'append_to_response' => 'credits,similar,videos'
