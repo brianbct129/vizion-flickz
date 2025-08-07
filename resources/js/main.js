@@ -392,11 +392,11 @@ function wowAnimation() {
 	=    		 Movie Server  	         =
 =============================================*/
 
-   $('#server2-mov').on('click', function() {
+   $('#server1-mov').on('click', function() {
         $('#videoPlayer').attr('src', `https://vidlink.pro/movie/${movieId}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
     });
 
-    $('#server1-mov').on('click', function() {
+    $('#server2-mov').on('click', function() {
         $('#videoPlayer').attr('src', `https://vidsrc.me/embed/movie/${movieId}`);
     });
 
@@ -405,21 +405,19 @@ function wowAnimation() {
 =============================================*/
 
 $('#server1-tv').on('click', function() {
-	// if (isAnime && anilistId) {
-	// 	$('#videoPlayer').attr('src', `https://player.smashy.stream/anime?anilist=${anilistId}&e=${episodeNumber}`);
-	// } else {
-	// 	$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
-	// }
-	$('#videoPlayer').attr('src', `https://vidsrc.me/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
+	if (isAnime && anilistId) {
+		$('#videoPlayer').attr('src', `https://player.smashy.stream/anime?anilist=${anilistId}&e=${episodeNumber}`);
+	} else {
+		$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
+	}
 });
 
 $('#server2-tv').on('click', function() {
-	// if (isAnime) {
-	// 	$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
-	// } else {
-	// 	$('#videoPlayer').attr('src', `https://vidsrc.me/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
-	// }
-	$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
+	if (isAnime) {
+		$('#videoPlayer').attr('src', `https://vidlink.pro/tv/${tvShowId}/${seasonNumber}/${episodeNumber}?primaryColor=7444EF&secondaryColor=1C1832&iconColor=7444EF&icons=default`);
+	} else {
+		$('#videoPlayer').attr('src', `https://vidsrc.me/embed/tv/${tvShowId}/${seasonNumber}/${episodeNumber}`);
+	}
 });
 })(jQuery);
 
