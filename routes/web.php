@@ -26,9 +26,6 @@ Route::get('/tv/{hash}/season/{season}', [TvShowController::class, 'season'])
     ->name('tv.season')
     ->where('hash', '[a-zA-Z0-9]+');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
-Route::get('/genre/{hash}', [GenreController::class, 'show'])
-    ->name('genres.show')
-    ->where('hash', '[a-zA-Z0-9]+');
 Route::get('/genre/{hash}/{name}', [GenreController::class, 'show'])
     ->name('genres.show')
     ->where('hash', '[a-zA-Z0-9]+');

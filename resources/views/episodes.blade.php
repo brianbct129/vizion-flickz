@@ -165,7 +165,7 @@
                                         @foreach($tvShow->genres as $genre)
                                             <li>
                                                 <a href="{{ route('genres.show', [
-                                                    'id' => $genre->id, 
+                                                    'hash' => \App\Helpers\HashidHelper::encode($genre->id), 
                                                     'name' => Str::slug(str_replace(['&', ' '], ['-and-', '-'], $genre->name))
                                                 ]) }}">
                                                     {{ $genre->name }}{{ !$loop->last ? ',' : '' }}
