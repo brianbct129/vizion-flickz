@@ -146,8 +146,7 @@
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"
-                                    sandbox="allow-scripts allow-same-origin" 
-                                    referrerpolicy="no-referrer"
+                                    referrerpolicy="origin" 
                                     scrolling="no"
                                     allowfullscreen></iframe>
                         </div>

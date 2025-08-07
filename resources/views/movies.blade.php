@@ -77,8 +77,7 @@ Watch {{ $movie->title }} ({{ \Carbon\Carbon::parse($movie->release_date)->forma
                                     frameborder="0" 
                                     loading="lazy" 
                                     decoding="async"
-                                    sandbox="allow-scripts allow-same-origin" 
-                                    referrerpolicy="no-referrer"
+                                    referrerpolicy="origin"
                                     allowfullscreen></iframe>
                         </div>
                        
